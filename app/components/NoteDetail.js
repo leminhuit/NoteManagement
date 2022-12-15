@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { Component, useRef, useState } from 'react'
 import { Text, StyleSheet, View, ScrollView, Alert } from 'react-native'
 import { useHeaderHeight } from '@react-navigation/elements'
 import colors from '../misc/colors'
@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNotes } from '../contexts/NoteProvider';
 import NoteInputModal from './NoteInputModal';
 
+// Xử lý việc lưu lại ngày ghi chú
 const formatDate = ms => {
   const date = new Date(ms)
   const day = date.getDate();
@@ -20,8 +21,10 @@ const formatDate = ms => {
 };
 
 const NoteDetail = (props) => {
+    // Hàm setNote ở đây để xử lí việc sau khi đã update note, note mới không được hiển thị
     const [note, setNote] = useState(props.route.params.note)
     const headerHeight = useHeaderHeight()
+    // Lấy ra hàm setNotes để lưu lại dữ liệu trong Async Storage
     const {setNotes} = useNotes()
     const [showModal, setShowModal] = useState(false)
     const [isEdit, setIsEdit] = useState(false)

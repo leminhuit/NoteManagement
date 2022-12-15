@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Text, StyleSheet, View, Dimensions, TouchableOpacity } from 'react-native'
 import colors from '../misc/colors';
 
+// Component xử lý việc hiển thị note trong màn hình chính và 
+// kết nối với NoteDetail khi ấn vào
 const Note = ({item, onPress}) => {
     const {title, desc} = item;
     return (

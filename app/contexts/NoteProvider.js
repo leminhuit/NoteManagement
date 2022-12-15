@@ -1,6 +1,7 @@
 import React, { Component, createContext, useContext, useEffect, useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
+// Context (dạng API) để xử lí việc lưu trữ, đọc và ghi các ghi chú giữa các màn hình
 const NoteContext = createContext()
 
 const NoteProvider = ({children}) => {
@@ -22,6 +23,7 @@ const NoteProvider = ({children}) => {
     )
 }
 
+// Tạo Hook riêng để sử dụng
 export const useNotes = () => useContext(NoteContext)
 
 export default NoteProvider;

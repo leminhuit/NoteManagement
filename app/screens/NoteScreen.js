@@ -17,6 +17,7 @@ const NoteScreen = ({user, navigation }) => {
     const [searchQuery, setSearchQuery] = useState('')
     const [resultNotFound, setResultNotFound] = useState(false)
 
+    // Sắp xếp các Notes theo trình tự thời gian, cái nào mới nhất sẽ ở trên đầu
     const reverseData = data => {
         return data.sort((a, b) => {
             const aInt = parseInt(a.time);
@@ -27,6 +28,7 @@ const NoteScreen = ({user, navigation }) => {
         });
     };
 
+    // Tạo lời chào cho App khi người dùng mở app
     const findGreet = () => {
         const hrs = new Date().getHours()
         if (hrs === 0 || hrs < 12) return setGreet('Morning');
@@ -34,12 +36,14 @@ const NoteScreen = ({user, navigation }) => {
         setGreet('Evening')
     }
 
+    // Render lại để hiển thị lời chào với tên người dùng sau khi đã render lần đầu
     useEffect(() => {
         findGreet()
     }, [])
 
     const reverseNotes = reverseData(notes)
 
+    // Xử lí việc tạo Note mới và lưu Note đó trong danh sách những Notes đã lưu
     const handleOnSubmit = async (title, desc) => {
         const note = {id: Date.now(), title, desc, time: Date.now() };
         const updatedNotes = [...notes, note];
@@ -47,10 +51,12 @@ const NoteScreen = ({user, navigation }) => {
         await AsyncStorage.setItem('notes', JSON.stringify(updatedNotes))
     }
 
+    // Mở NoteDetail của Note mình ấn chọn trong màn hình chính
     const openNote = (note) => {
         navigation.navigate('NoteDetail', {note});
     }
 
+    // Hàm xử lý Live Search (search chủ yếu bằng tiêu đề của Note)
     const handleOnSeachInput = async (text) => {
         setSearchQuery(text);
 
@@ -73,6 +79,7 @@ const NoteScreen = ({user, navigation }) => {
         }
     }
 
+    // Xử lí việc ấn nút X (Clear) bên cạnh thanh tìm kiếm
     const handleOnClear = async () => {
         setSearchQuery('')
         setResultNotFound(false)
@@ -87,12 +94,15 @@ const NoteScreen = ({user, navigation }) => {
                 <View style={styles.container}>
                     <Text style={styles.header}>{`Good ${greet}, ${user.name}`}</Text>
 
+                    {/* Nếu có ghi chú trong AStorage thì hiển thị thanh Search Bar */}
                     {notes.length ? (
                         <SearchBar value={searchQuery} onChangeText={handleOnSeachInput} 
                         containerStyle={{marginVertical: 15}}
                         onClear={handleOnClear}/>
                     ) : null}
 
+                    {/* Nếu không có note có tên đó trong dữ liệu thì render màn hình không tìm thấy
+                    , ngược lại render kết quả */}
                     {resultNotFound? <NotFound/> : 
                         <FlatList data={reverseNotes} numColumns={2} 
                         columnWrapperStyle={{justifyContent: 'space-between', marginBottom: 15}} 

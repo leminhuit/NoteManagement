@@ -3,14 +3,26 @@ import { Text, StyleSheet, View, Modal, Keyboard, StatusBar, TextInput, Touchabl
 import colors from '../misc/colors'
 import RoundIconBtn from "../components/RoundIconBtn";
 
+// Modal xuất hiện khih ta muốn tạo ra Note mới hoặc Edit Note cũ
+// Gồm các thuộc tính :
+// visible : để ẩn hiện modal này cho edit hay tạo note mới
+// onClose : hàm xử lý khi tắt đi modal
+// onSubmit : hàm xử lý khi xác nhận lưu Note
+// note: lưu, đọc dữ liệu của Note trong Async Storage
+// isEdit: xác định xem liệu mở Note lên để edit hay là note mới
+
 const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
+    // Title dùng để lưu trữ tên của note
     const [title, setTitle] = useState('');
+    // Desc dùng để lưu trữ nội dung của note
     const [desc, setDesc] = useState('');
 
+    // Xử lý việc đóng bàn phím khi ấn vào vùng trống của Modal
     const handleModalClose = () => {
         Keyboard.dismiss();
     }
 
+    // Nếu mở Modal lên để Edit, mở lại Note cũ đã viết
     useEffect(() => {
         if (isEdit) {
             setTitle(note.title)
@@ -18,11 +30,13 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         }
     }, [isEdit])
 
+
     const handleOnChangeText = (text, valueFor) => {
         if (valueFor === 'title') setTitle(text);
         if (valueFor === 'desc') setDesc(text);
     }
 
+    // Xử lý việc tạo mới cũng như update note
     const handleSubmit = () => {
         if (!title.trim() && !desc.trim()) return onClose();
 
@@ -37,6 +51,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         onClose();
     }
 
+    // Xử lý việc đóng modal
     const closeModal = () => {
         if (!isEdit) {
             setTitle('');
@@ -56,6 +71,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                     placeholder='Title'
                     style={[styles.input, styles.title]}
                 />
+                {/* TO-DO list: Thay thể TextInput đơn giản thành Rich Text Editor để format Note */}
                 <TextInput
                     value={desc}
                     multiline

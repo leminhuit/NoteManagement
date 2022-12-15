@@ -3,6 +3,7 @@ import React from 'react'
 import { AntDesign } from '@expo/vector-icons'
 import colors from '../misc/colors'
 
+// Hàm tạo ra một nút (Button) có custom style là hình tròn
 const RoundIconBtn = ({antIconName, size, color, style, onPress}) => {
     return <AntDesign 
     name={antIconName} 

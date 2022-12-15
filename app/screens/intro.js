@@ -4,10 +4,14 @@ import {View, StyleSheet, TextInput, Text, Dimensions, StatusBar} from 'react-na
 import RoundIconBtn from "../components/RoundIconBtn";
 import colors from '../misc/colors'
 
+// Màn hình intro khi lần đầu sử dụng app
 const Intro = ({onFinish}) => {
+    //  Giữ lại tên của người dùng trong state name
     const [name, setName] = useState('')
+
     const handleOnChangeText = (text) => setName(text);
     
+    // Lấy tên của người dùng khi người dùng đã nhập tên
     const handleSubmit = async() => {
         const user = { name: name};
         await AsyncStorage.setItem('user', JSON.stringify(user));
