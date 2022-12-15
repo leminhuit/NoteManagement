@@ -7,6 +7,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNotes } from '../contexts/NoteProvider';
 import NoteInputModal from './NoteInputModal';
 
+/////////////////////////////////////////////////
+import {
+  actions,
+  RichEditor,
+  RichToolbar,
+} from "react-native-pell-rich-editor";
+/////////////////////////////////////////////////
+
 // Xử lý việc lưu lại ngày ghi chú
 const formatDate = ms => {
   const date = new Date(ms)
@@ -28,6 +36,10 @@ const NoteDetail = (props) => {
     const {setNotes} = useNotes()
     const [showModal, setShowModal] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
+
+    /////////////////////////////////////////////////
+    const richText = useRef();
+    /////////////////////////////////////////////////
 
     const deleteNote = async () => {
       const result = await AsyncStorage.getItem('notes')
@@ -89,6 +101,32 @@ const NoteDetail = (props) => {
         <Text style={styles.title}>{note.title}</Text>
         <Text style={styles.desc}>{note.desc}</Text>
 
+
+        <RichToolbar 
+          editor={richText}
+          selectedIconTint="#873c1e"
+          iconTint="#312921"
+          actions={[
+          actions.insertImage,
+          actions.setBold,
+          actions.setItalic,
+          actions.insertBulletsList,
+          actions.insertOrderedList,
+          actions.insertLink,
+          actions.setStrikethrough,
+          actions.setUnderline,
+          ]}
+          style={styles.richTextToolbarStyle} />
+
+        <RichEditor
+          ref={richText}
+          initialContentHTML={note.desc}
+          androidHardwareAccelerationDisabled={true}
+          style={styles.richTextEditorStyle}
+          initialHeight={250}
+        />
+
+
       </ScrollView>
 
         <View style={styles.btnContainer}>
@@ -125,6 +163,28 @@ const styles = StyleSheet.create({
       position: 'absolute',
       right: 15,
       bottom: 50, 
+    },
+    richTextEditorStyle: {
+      borderBottomLeftRadius: 10,
+      borderBottomRightRadius: 10,
+      borderWidth: 1,
+      borderColor: "#ccaf9b",
+      shadowColor: "#000",
+      shadowOffset: {
+      width: 0,
+      height: 2,
+      },
+      shadowOpacity: 0.23,
+      shadowRadius: 2.62,
+      elevation: 4,
+      fontSize: 20,
+    },
+    richTextToolbarStyle: {
+      backgroundColor: "#c6c3b3",
+      borderColor: "#c6c3b3",
+      borderTopLeftRadius: 10,
+      borderTopRightRadius: 10,
+      borderWidth: 1,
     },
 })
 

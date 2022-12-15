@@ -39,6 +39,7 @@ const NoteScreen = ({user, navigation }) => {
     // Render lại để hiển thị lời chào với tên người dùng sau khi đã render lần đầu
     useEffect(() => {
         findGreet()
+        console.log(notes)
     }, [])
 
     const reverseNotes = reverseData(notes)

@@ -1,7 +1,15 @@
-import React, { Component, useEffect, useState } from 'react'
+import React, { Component, useEffect, useRef, useState } from 'react'
 import { Text, StyleSheet, View, Modal, Keyboard, StatusBar, TextInput, TouchableWithoutFeedback } from 'react-native'
 import colors from '../misc/colors'
 import RoundIconBtn from "../components/RoundIconBtn";
+
+/////////////////////////////////////////////////
+import {
+    actions,
+    RichEditor,
+    RichToolbar,
+  } from "react-native-pell-rich-editor";
+/////////////////////////////////////////////////
 
 // Modal xuất hiện khih ta muốn tạo ra Note mới hoặc Edit Note cũ
 // Gồm các thuộc tính :
@@ -16,6 +24,39 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
     const [title, setTitle] = useState('');
     // Desc dùng để lưu trữ nội dung của note
     const [desc, setDesc] = useState('');
+
+    /////////////////////////////////////////////////
+    const richText = useRef();
+
+    const richTextHandle = (descriptionText) => {
+        if (descriptionText) {
+          setDesc(descriptionText);
+        } else {
+          setDesc("");
+        }
+    };
+
+    const submitContentHandle = () => {
+        // const replaceHTML = desc.replace(/<(.|\n)*?>/g, "").trim();
+        // const replaceWhiteSpace = replaceHTML.replace(/&nbsp;/g, "").trim();
+    
+        if (desc.length <= 0) {
+          console.log("This is where it ends")
+        } else {
+            if (isEdit) {
+                console.log("Im here")
+                onSubmit(title, desc, Date.now())
+            }
+            else{
+                console.log("Now Im here")
+                onSubmit(title, desc);
+                setTitle('');
+                setDesc('');
+            }
+            onClose();
+        }
+    };
+    /////////////////////////////////////////////////
 
     // Xử lý việc đóng bàn phím khi ấn vào vùng trống của Modal
     const handleModalClose = () => {
@@ -80,8 +121,38 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                     onChangeText={text => handleOnChangeText(text, 'desc')}
                 />
 
+                {/* ///////////////////////////////////////////////// */}
+
+                <RichToolbar
+                    editor={richText}
+                    selectedIconTint="#873c1e"
+                    iconTint="#312921"
+                    actions={[
+                    actions.insertImage,
+                    actions.setBold,
+                    actions.setItalic,
+                    actions.insertBulletsList,
+                    actions.insertOrderedList,
+                    actions.insertLink,
+                    actions.setStrikethrough,
+                    actions.setUnderline,
+                    ]}
+                    style={styles.richTextToolbarStyle} />
+        
+                <RichEditor
+                    ref={richText}
+                    initialContentHTML={desc}
+                    onChange={richTextHandle}
+                    placeholder="Write your cool content here :)"
+                    androidHardwareAccelerationDisabled={true}
+                    style={styles.richTextEditorStyle}
+                    initialHeight={250}
+                />
+
+                {/* ///////////////////////////////////////////////// */}
+
                 <View style={styles.btnContainer}>
-                    <RoundIconBtn size={15} antIconName='check' onPress={handleSubmit}/>
+                    <RoundIconBtn size={15} antIconName='check' onPress={submitContentHandle}/>
                     { title.trim() || desc.trim() ? (<RoundIconBtn size={15} 
                     style={{marginLeft: 15}} antIconName='close' onPress={closeModal}/>) : null}
                 </View>
@@ -122,6 +193,30 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingVertical: 15,
     },
+    ////////////////////////////////
+    richTextEditorStyle: {
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+        borderWidth: 1,
+        borderColor: "#ccaf9b",
+        shadowColor: "#000",
+        shadowOffset: {
+        width: 0,
+        height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+        elevation: 4,
+        fontSize: 20,
+    },
+    richTextToolbarStyle: {
+        backgroundColor: "#c6c3b3",
+        borderColor: "#c6c3b3",
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        borderWidth: 1,
+    },
+    ////////////////////////////////
 })
 
 export default NoteInputModal;

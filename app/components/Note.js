@@ -6,10 +6,14 @@ import colors from '../misc/colors';
 // kết nối với NoteDetail khi ấn vào
 const Note = ({item, onPress}) => {
     const {title, desc} = item;
+
+    const replaceHTML = desc.replace(/<(.|\n)*?>/g, "").trim();
+    const replaceWhiteSpace = replaceHTML.replace(/&nbsp;/g, "").trim();
+
     return (
       <TouchableOpacity onPress={onPress} style={styles.container}>
         <Text style={styles.title} numberOfLines={2}>{title}</Text>
-        <Text numberOfLines={3}>{desc}</Text>
+        <Text numberOfLines={3}>{replaceWhiteSpace}</Text>
       </TouchableOpacity>
     )
 }
