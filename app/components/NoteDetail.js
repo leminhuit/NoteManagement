@@ -65,6 +65,10 @@ const NoteDetail = (props) => {
       onPress: () => console.log('cancel delete')
     }], { cancelable: true, })}
 
+    // *************************************************
+    // Problem arise when we updated the note during use
+    // *************************************************
+
     const handleUpdate = async (title, desc, time) => {
       const result = await AsyncStorage.getItem('notes')
       let notes = []
@@ -99,34 +103,32 @@ const NoteDetail = (props) => {
 
         <Text style={styles.time}>{note.isUpdated ? `Updated At ${formatDate(note.time)}` : `Created At ${formatDate(note.time)}`}</Text>
         <Text style={styles.title}>{note.title}</Text>
-        <Text style={styles.desc}>{note.desc}</Text>
+        {/* <Text style={styles.desc}>{note.desc}</Text> */}
+        
+        <ScrollView>
+          {/* <RichToolbar 
+            editor={richText}
+            selectedIconTint="#873c1e"
+            iconTint="#312921"
+            actions={[
+            actions.insertImage,
+            actions.setBold,
+            actions.setItalic,
+            actions.insertBulletsList,
+            actions.insertOrderedList,
+            actions.insertLink,
+            actions.setStrikethrough,
+            actions.setUnderline,
+            ]}
+            style={styles.richTextToolbarStyle} /> */}
 
-
-        <RichToolbar 
-          editor={richText}
-          selectedIconTint="#873c1e"
-          iconTint="#312921"
-          actions={[
-          actions.insertImage,
-          actions.setBold,
-          actions.setItalic,
-          actions.insertBulletsList,
-          actions.insertOrderedList,
-          actions.insertLink,
-          actions.setStrikethrough,
-          actions.setUnderline,
-          ]}
-          style={styles.richTextToolbarStyle} />
-
-        <RichEditor
-          ref={richText}
-          initialContentHTML={note.desc}
-          androidHardwareAccelerationDisabled={true}
-          style={styles.richTextEditorStyle}
-          initialHeight={250}
-        />
-
-
+          <RichEditor
+            // ref={richText}
+            initialContentHTML={note.desc}
+            style={styles.richTextEditorStyle}
+            initialHeight={250}
+          />
+        </ScrollView>
       </ScrollView>
 
         <View style={styles.btnContainer}>

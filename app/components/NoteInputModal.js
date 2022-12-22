@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useRef, useState } from 'react'
-import { Text, StyleSheet, View, Modal, Keyboard, StatusBar, TextInput, TouchableWithoutFeedback } from 'react-native'
+import { Text, StyleSheet, View, Modal, Keyboard, StatusBar, TextInput, TouchableWithoutFeedback, ScrollView } from 'react-native'
 import colors from '../misc/colors'
 import RoundIconBtn from "../components/RoundIconBtn";
 
@@ -11,7 +11,7 @@ import {
   } from "react-native-pell-rich-editor";
 /////////////////////////////////////////////////
 
-// Modal xuất hiện khih ta muốn tạo ra Note mới hoặc Edit Note cũ
+// Modal xuất hiện khi ta muốn tạo ra Note mới hoặc Edit Note cũ
 // Gồm các thuộc tính :
 // visible : để ẩn hiện modal này cho edit hay tạo note mới
 // onClose : hàm xử lý khi tắt đi modal
@@ -40,21 +40,19 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         // const replaceHTML = desc.replace(/<(.|\n)*?>/g, "").trim();
         // const replaceWhiteSpace = replaceHTML.replace(/&nbsp;/g, "").trim();
     
-        if (desc.length <= 0) {
-          console.log("This is where it ends")
-        } else {
-            if (isEdit) {
-                console.log("Im here")
-                onSubmit(title, desc, Date.now())
-            }
-            else{
-                console.log("Now Im here")
-                onSubmit(title, desc);
-                setTitle('');
-                setDesc('');
-            }
-            onClose();
+        if (!title.trim() && !desc.trim()) return onClose();
+
+        if (isEdit) {
+            console.log("Im here")
+            onSubmit(title, desc, Date.now())
         }
+        else{
+            console.log("Now Im here")
+            onSubmit(title, desc);
+            setTitle('');
+            setDesc('');
+        }
+        onClose();
     };
     /////////////////////////////////////////////////
 
@@ -113,43 +111,40 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                     style={[styles.input, styles.title]}
                 />
                 {/* TO-DO list: Thay thể TextInput đơn giản thành Rich Text Editor để format Note */}
-                <TextInput
+                {/* <TextInput
                     value={desc}
                     multiline
                     placeholder='Note'
                     style={[styles.input, styles.desc]}
                     onChangeText={text => handleOnChangeText(text, 'desc')}
-                />
+                /> */}
 
-                {/* ///////////////////////////////////////////////// */}
-
-                <RichToolbar
-                    editor={richText}
-                    selectedIconTint="#873c1e"
-                    iconTint="#312921"
-                    actions={[
-                    actions.insertImage,
-                    actions.setBold,
-                    actions.setItalic,
-                    actions.insertBulletsList,
-                    actions.insertOrderedList,
-                    actions.insertLink,
-                    actions.setStrikethrough,
-                    actions.setUnderline,
-                    ]}
-                    style={styles.richTextToolbarStyle} />
-        
-                <RichEditor
-                    ref={richText}
-                    initialContentHTML={desc}
-                    onChange={richTextHandle}
-                    placeholder="Write your cool content here :)"
-                    androidHardwareAccelerationDisabled={true}
-                    style={styles.richTextEditorStyle}
-                    initialHeight={250}
-                />
-
-                {/* ///////////////////////////////////////////////// */}
+                <ScrollView>
+                    <RichToolbar
+                        editor={richText}
+                        selectedIconTint="#873c1e"
+                        iconTint="#312921"
+                        actions={[
+                        actions.insertImage,
+                        actions.setBold,
+                        actions.setItalic,
+                        actions.insertBulletsList,
+                        actions.insertOrderedList,
+                        actions.insertLink,
+                        actions.setStrikethrough,
+                        actions.setUnderline,
+                        ]}
+                        style={styles.richTextToolbarStyle} />
+            
+                    <RichEditor
+                        ref={richText}
+                        initialContentHTML={desc}
+                        onChange={richTextHandle}
+                        placeholder="Write your cool content here :)"
+                        style={styles.richTextEditorStyle}
+                        initialHeight={250}
+                    />
+                </ScrollView>
 
                 <View style={styles.btnContainer}>
                     <RoundIconBtn size={15} antIconName='check' onPress={submitContentHandle}/>

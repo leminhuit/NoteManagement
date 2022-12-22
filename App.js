@@ -29,11 +29,12 @@ export default function App() {
 
   // Hàm render sau khi component chinh đã update, nhầm tìm người dùng nếu đã sử dụng qua app
   useEffect(() => {
+    // AsyncStorage.clear()
     findUser()
   }, [])
 
   // If there is no "props" properties, you can't use Navigation in the NoteScreen components
-  const RenderNoteScreen = (props) => <NoteScreen {...props} user={user}/>
+  const RenderNoteScreen = props => <NoteScreen {...props} user={user}/>
 
   // Nếu lần đầu sử dụng app thì render màn hình Intro, không thì render thẳng màn
   // hình Note của app, hàm onFinish là hàm giả nhàm pass được hàm findUser cho màn hình Intro
