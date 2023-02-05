@@ -73,7 +73,6 @@ const NoteDetail = (props) => {
       const result = await AsyncStorage.getItem('notes')
       let notes = []
       if (result !== null) notes = JSON.parse(result)
-
       const newNotes = notes.filter(n => {
         if (n.id === note.id) {
           n.title = title

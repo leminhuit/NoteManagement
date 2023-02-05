@@ -45,8 +45,8 @@ const NoteScreen = ({user, navigation }) => {
     const reverseNotes = reverseData(notes)
 
     // Xử lí việc tạo Note mới và lưu Note đó trong danh sách những Notes đã lưu
-    const handleOnSubmit = async (title, desc) => {
-        const note = {id: Date.now(), title, desc, time: Date.now() };
+    const handleOnSubmit = async (title, desc,isPushpin) => {
+        const note = {id: Date.now(), title, desc, time: Date.now(),isPushpin: false };
         const updatedNotes = [...notes, note];
         setNotes(updatedNotes)
         await AsyncStorage.setItem('notes', JSON.stringify(updatedNotes))
@@ -86,6 +86,25 @@ const NoteScreen = ({user, navigation }) => {
         setResultNotFound(false)
         await findNotes()
     }
+    const handleOnPressPush = async(note)=>{
+        const result = await AsyncStorage.getItem('notes')
+        let notes = []
+        if (result !== null) notes = JSON.parse(result)
+
+        const newNotes = notes.filter(n => {
+            if (n.id === note.id) {
+            if(n.isPushpin===false){
+                n.isPushpin = true
+            }
+            else{
+                n.isPushpin = false
+            }
+        }
+            return n;
+        })
+        setNotes(newNotes)
+        await AsyncStorage.setItem('notes', JSON.stringify(newNotes))
+    }
 
     return (
         <>
@@ -108,7 +127,7 @@ const NoteScreen = ({user, navigation }) => {
                         <FlatList data={reverseNotes} numColumns={2} 
                         columnWrapperStyle={{justifyContent: 'space-between', marginBottom: 15}} 
                         keyExtractor={item => item.id.toString()} 
-                        renderItem={({item}) => <Note onPress={() => openNote(item)} item = {item}/>} />
+                        renderItem={({item}) => <Note onPress={() => openNote(item)} item = {item} onPressPush={()=>handleOnPressPush(item)}/>} />
                     }
 
                     {!notes.length ? 

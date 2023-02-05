@@ -1,18 +1,23 @@
 import React, { Component } from 'react'
 import { Text, StyleSheet, View, Dimensions, TouchableOpacity } from 'react-native'
 import colors from '../misc/colors';
+import Pushpin from './Pushpin.js';
 
 // Component xử lý việc hiển thị note trong màn hình chính và 
 // kết nối với NoteDetail khi ấn vào
-const Note = ({item, onPress}) => {
-    const {title, desc} = item;
+const Note = ({item, onPress,onPressPush}) => {
+    const {title, desc,isPushpin} = item;
 
     const replaceHTML = desc.replace(/<(.|\n)*?>/g, "").trim();
     const replaceWhiteSpace = replaceHTML.replace(/&nbsp;/g, "").trim();
-
     return (
       <TouchableOpacity onPress={onPress} style={styles.container}>
         <Text style={styles.title} numberOfLines={2}>{title}</Text>
+
+        {
+          isPushpin===true?<Pushpin antIconName='pushpin' style={styles.addPushpin} onPress={onPressPush}/>:
+          <Pushpin antIconName='pushpino' style={styles.addPushpin} onPress={onPressPush}/>
+        }
         <Text numberOfLines={3}>{replaceWhiteSpace}</Text>
       </TouchableOpacity>
     )
@@ -33,6 +38,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: colors.LIGHT,
     },
+    addPushpin:{
+      position: 'absolute',
+      right:10,
+      top: 6,
+      fontSize: 20,
+      zIndex: 1
+    }
 
 })
 
