@@ -44,6 +44,14 @@ const NoteScreen = ({user, navigation }) => {
 
     const reverseNotes = reverseData(notes)
 
+    const reverseNotes_Push = reverseNotes.filter(note=>{
+        return note.isPushpin === true
+    })
+
+    const reverseNotes_NoPush = reverseNotes.filter(note=>{
+        return note.isPushpin === false
+    })
+
     // Xử lí việc tạo Note mới và lưu Note đó trong danh sách những Notes đã lưu
     const handleOnSubmit = async (title, desc,isPushpin) => {
         const note = {id: Date.now(), title, desc, time: Date.now(),isPushpin: false };
@@ -124,10 +132,21 @@ const NoteScreen = ({user, navigation }) => {
                     {/* Nếu không có note có tên đó trong dữ liệu thì render màn hình không tìm thấy
                     , ngược lại render kết quả */}
                     {resultNotFound? <NotFound/> : 
-                        <FlatList data={reverseNotes} numColumns={2} 
-                        columnWrapperStyle={{justifyContent: 'space-between', marginBottom: 15}} 
-                        keyExtractor={item => item.id.toString()} 
-                        renderItem={({item}) => <Note onPress={() => openNote(item)} item = {item} onPressPush={()=>handleOnPressPush(item)}/>} />
+                        <View >
+                            {Object.entries(reverseNotes_Push).length !== 0 ? <Text> Được ghim </Text> : null}
+                            
+                            <FlatList data={reverseNotes_Push} numColumns={2} 
+                            columnWrapperStyle={{justifyContent: 'space-between', marginBottom: 15}} 
+                            keyExtractor={item => item.id.toString()}
+                            renderItem={({item}) => <Note onPress={() => openNote(item)} item = {item} onPressPush={()=>handleOnPressPush(item)}/>}/>
+
+                             {Object.entries(reverseNotes_NoPush).length !== 0 ? <Text> Khác </Text> : null} 
+                            <FlatList data={reverseNotes_NoPush} numColumns={2} 
+                            columnWrapperStyle={{justifyContent: 'space-between', marginBottom: 15}} 
+                            keyExtractor={item => item.id.toString()} 
+                            
+                            renderItem={({item}) => <Note onPress={() => openNote(item)} item = {item} onPressPush={()=>handleOnPressPush(item)}/>} />
+                        </View>
                     }
 
                     {!notes.length ? 
