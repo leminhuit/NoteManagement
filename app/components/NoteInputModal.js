@@ -99,6 +99,10 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         onClose();
     }
 
+    const handleOpenTimeBells = () =>{
+        
+    }
+
     return (
         <>
         <StatusBar hidden/>
@@ -150,12 +154,14 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                     <RoundIconBtn size={15} antIconName='check' onPress={submitContentHandle}/>
                     { title.trim() || desc.trim() ? (<RoundIconBtn size={15} 
                     style={{marginLeft: 15}} antIconName='close' onPress={closeModal}/>) : null}
+                    
                 </View>
             </View>
 
             <TouchableWithoutFeedback onPress={handleModalClose}>
                 <View style={[styles.modalBG, StyleSheet.absoluteFillObject]}/>
             </TouchableWithoutFeedback>
+            <RoundIconBtn antIconName='bells' style={styles.bells} onPress={handleOpenTimeBells}/>
         </Modal>
         </>
 )}
@@ -210,6 +216,12 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         borderWidth: 1,
+    },
+    bells:{
+        position: 'absolute',
+        right: 15,
+        bottom: 50,
+        zIndex: 1,
     },
     ////////////////////////////////
 })
