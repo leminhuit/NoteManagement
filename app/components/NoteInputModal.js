@@ -1,7 +1,9 @@
 import React, { Component, useEffect, useRef, useState } from 'react'
-import { Text, StyleSheet, View, Modal, Keyboard, StatusBar, TextInput, TouchableWithoutFeedback, ScrollView } from 'react-native'
+import { Text, StyleSheet, View, Modal, Keyboard, StatusBar, TextInput, TouchableWithoutFeedback, ScrollView, Platform } from 'react-native'
 import colors from '../misc/colors'
 import RoundIconBtn from "../components/RoundIconBtn";
+import DateTimePicker from '@react-native-community/datetimepicker'
+import Bells_ from './Bells_.js';
 
 /////////////////////////////////////////////////
 import {
@@ -25,6 +27,39 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
     // Desc dùng để lưu trữ nội dung của note
     const [desc, setDesc] = useState('');
 
+    const [date,setDate] = useState(new Date());
+    const [mode, setMode] = useState('datetime')
+    const [show, setShow] = useState(false)
+    const [text, setText] = useState('')
+    const [isbells, setIsBells] = useState(false)
+
+    const onChange = (event, selectedDate)=>{
+        const currentDate = selectedDate || date
+        setShow(Platform.OS == 'ios')
+        setDate(currentDate)
+
+        let tempDate = new Date(currentDate)
+        let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
+        let fTime = tempDate.getHours() + ':' + tempDate.getMinutes()
+        setText(fDate + ' - ' + fTime)
+
+        console.log(fDate + ' - ' + fTime)
+    }
+
+    const showMode = (currentMode) =>{
+        setShow(true)
+        setMode(currentMode)
+    }
+
+    const handleOnDateTime = () =>{
+        setIsBells(false)
+        if (text === ''){
+            const dateNow = new Date()
+            let fDate = dateNow.getDate() + '/' + (dateNow.getMonth() + 1) + '/' + dateNow.getFullYear();
+            let fTime = dateNow.getHours() + ':' + dateNow.getMinutes()
+            setText(fDate + ' - ' + fTime)
+        }
+    }
     /////////////////////////////////////////////////
     const richText = useRef();
 
@@ -40,8 +75,11 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         // const replaceHTML = desc.replace(/<(.|\n)*?>/g, "").trim();
         // const replaceWhiteSpace = replaceHTML.replace(/&nbsp;/g, "").trim();
     
-        if (!title.trim() && !desc.trim()) return onClose();
-
+        if (!title.trim() && !desc.trim()) {
+            setText('')
+            return onClose();
+        }
+//////////////////////////////////////////////////// thêm bells
         if (isEdit) {
             console.log("Im here")
             onSubmit(title, desc, Date.now())
@@ -52,6 +90,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
             setTitle('');
             setDesc('');
         }
+        setText('')
         onClose();
     };
     /////////////////////////////////////////////////
@@ -99,8 +138,25 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         onClose();
     }
 
-    const handleOpenTimeBells = () =>{
-        
+    const handleOpenTimeBells = async() =>{
+        // const channelId = await notifee.createChannel({
+        //     id: 'default',
+        //     name: 'Default Channel',
+        //   });
+
+        //   await notifee.displayNotification({
+        //     title: 'Notification Title',
+        //     body: 'Main body content of the notification',
+        //     android: {
+        //       channelId,
+        //       smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
+        //       // pressAction is needed if you want the notification to open the app when pressed
+        //       pressAction: {
+        //         id: 'default',
+        //       },
+        //     },
+        //   });
+        console.log("notify")
     }
 
     return (
@@ -161,7 +217,23 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
             <TouchableWithoutFeedback onPress={handleModalClose}>
                 <View style={[styles.modalBG, StyleSheet.absoluteFillObject]}/>
             </TouchableWithoutFeedback>
-            <RoundIconBtn antIconName='bells' style={styles.bells} onPress={handleOpenTimeBells}/>
+            <RoundIconBtn antIconName='bells' style={styles.bells} onPress={()=>setIsBells(true)}/>
+            
+                {isbells && <Bells_ 
+                    date={date} 
+                    onClickDate = {()=>showMode('date')} 
+                    onClickTime = {()=>showMode('time')} 
+                    onSubmit={handleOnDateTime} />}
+            
+            <Text style={styles.bellText}>{text}</Text>
+            {show && (<DateTimePicker
+                testID='dateTimePicker'
+                value={date}
+                mode = {mode}
+                is24Hour={true}
+                display = 'default'
+                onChange={onChange}
+            />)}
         </Modal>
         </>
 )}
@@ -222,6 +294,13 @@ const styles = StyleSheet.create({
         right: 15,
         bottom: 50,
         zIndex: 1,
+    },
+    bellText:{
+        position: 'absolute',
+        right: 90,
+        bottom: 65,
+        fontSize: 20,
+        color: colors.PRIMARY
     },
     ////////////////////////////////
 })
