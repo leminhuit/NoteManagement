@@ -31,6 +31,8 @@ export default function App() {
   useEffect(() => {
     // AsyncStorage.clear()
     findUser()
+
+    
   }, [])
 
   // If there is no "props" properties, you can't use Navigation in the NoteScreen components
