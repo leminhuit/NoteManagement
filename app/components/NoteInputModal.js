@@ -2,8 +2,10 @@ import React, { Component, useEffect, useRef, useState } from 'react'
 import { Text, StyleSheet, View, Modal, Keyboard, StatusBar, TextInput, TouchableWithoutFeedback, ScrollView, Platform } from 'react-native'
 import colors from '../misc/colors'
 import RoundIconBtn from "../components/RoundIconBtn";
+import RoundIconBtn_Found from "../components/RoundIconBtn_Found";
 import DateTimePicker from '@react-native-community/datetimepicker'
 import Bells_ from './Bells_.js';
+import SelectColor from './SelectColor.js'
 
 /////////////////////////////////////////////////
 import {
@@ -32,6 +34,11 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
     const [show, setShow] = useState(false)
     const [text, setText] = useState('')
     const [isbells, setIsBells] = useState(false)
+
+    // ---------- select color
+    const [selectColors, setSelectColors] = useState(false)
+    const [color, setColor] = useState(colors.PRIMARY)
+
 
     const onChange = (event, selectedDate)=>{
         const currentDate = selectedDate || date
@@ -77,18 +84,20 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
     
         if (!title.trim() && !desc.trim()) {
             setText('')
+            setSelectColors(false)
             return onClose();
         }
 //////////////////////////////////////////////////// thêm bells
         if (isEdit) {
             console.log("Im here")
-            onSubmit(title, desc, Date.now())
+            onSubmit(title, desc,date, Date.now())
         }
         else{
             console.log("Now Im here")
-            onSubmit(title, desc);
+            onSubmit(title, desc,date);
             setTitle('');
             setDesc('');
+            setSelectColors(false)
         }
         setText('')
         onClose();
@@ -119,10 +128,10 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         if (!title.trim() && !desc.trim()) return onClose();
 
         if (isEdit) {
-            onSubmit(title, desc, Date.now())
+            onSubmit(title, desc, date, Date.now())
         }
         else{
-            onSubmit(title, desc);
+            onSubmit(title, desc, date);
             setTitle('');
             setDesc('');
         }
@@ -218,12 +227,16 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                 <View style={[styles.modalBG, StyleSheet.absoluteFillObject]}/>
             </TouchableWithoutFeedback>
             <RoundIconBtn antIconName='bells' style={styles.bells} onPress={()=>setIsBells(true)}/>
-            
+            <RoundIconBtn_Found antIconName='paint-bucket' style={styles.Colors} onPress = {()=>selectColors ? setSelectColors(false) : setSelectColors(true)}/>
                 {isbells && <Bells_ 
                     date={date} 
                     onClickDate = {()=>showMode('date')} 
                     onClickTime = {()=>showMode('time')} 
                     onSubmit={handleOnDateTime} />}
+
+                {
+                    selectColors && <SelectColor/>
+                }
             
             <Text style={styles.bellText}>{text}</Text>
             {show && (<DateTimePicker
@@ -292,7 +305,7 @@ const styles = StyleSheet.create({
     bells:{
         position: 'absolute',
         right: 15,
-        bottom: 50,
+        bottom: 30,
         zIndex: 1,
     },
     bellText:{
@@ -302,6 +315,12 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: colors.PRIMARY
     },
+    Colors: {
+        position: 'absolute',
+        right: 15,
+        bottom: 100,
+        zIndex: 1,
+    }
     ////////////////////////////////
 })
 
