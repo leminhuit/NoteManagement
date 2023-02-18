@@ -52,15 +52,20 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         setShow(Platform.OS == 'ios');
         setDate(currentDate);
 
-        let tempDate = new Date(currentDate);
-        let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
-        let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
-        setText(fDate + ' - ' + fTime);
-        
-
-        console.log(fDate + ' - ' + fTime);
-
-        setDateTime(selectedDate);
+        if (selectedDate) {
+            if (selectedDate < new Date()) {
+                selectedDate = new Date();
+                Alert.alert('Please select a future date and time');
+            }
+            let tempDate = new Date(currentDate);
+            let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
+            let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
+            setText(fDate + ' - ' + fTime);
+            
+            console.log(fDate + ' - ' + fTime);
+    
+            setDateTime(selectedDate);
+        }     
     }
 
     const showMode = (currentMode) =>{
