@@ -1,11 +1,14 @@
 import React, { Component, useEffect, useRef, useState } from 'react'
-import { Text, StyleSheet, View, Modal, Keyboard, StatusBar, TextInput, TouchableWithoutFeedback, ScrollView, Platform } from 'react-native'
+import { Text, StyleSheet, View, Modal, Keyboard, StatusBar, TextInput, TouchableWithoutFeedback, ScrollView, Platform, Alert  } from 'react-native'
 import colors from '../misc/colors'
 import RoundIconBtn from "../components/RoundIconBtn";
 import RoundIconBtn_Found from "../components/RoundIconBtn_Found";
 import DateTimePicker from '@react-native-community/datetimepicker'
 import Bells_ from './Bells_.js';
 import SelectColor from './SelectColor.js'
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /////////////////////////////////////////////////
 import {
@@ -34,6 +37,10 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
     const [show, setShow] = useState(false)
     const [text, setText] = useState('')
     const [isbells, setIsBells] = useState(false)
+    const [dateTime, setDateTime] = useState(new Date());
+    const [notification, setNotification] = useState(false);
+    const notificationListener = useRef();
+    const responseListener = useRef();
 
     // ---------- select color
     const [selectColors, setSelectColors] = useState(false)
@@ -49,8 +56,11 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
         let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
         setText(fDate + ' - ' + fTime);
+        
 
         console.log(fDate + ' - ' + fTime);
+
+        setDateTime(selectedDate);
     }
 
     const showMode = (currentMode) =>{
@@ -123,7 +133,48 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         if (isEdit) {
             setTitle(note.title)
             setDesc(note.desc)
-        }
+        };
+        const getPermission = async () => {
+            if (Device.isDevice) {
+                const { status: existingStatus } = await Notifications.getPermissionsAsync();
+                let finalStatus = existingStatus;
+                if (existingStatus !== 'granted') {
+                  const { status } = await Notifications.requestPermissionsAsync();
+                  finalStatus = status;
+                }
+                if (finalStatus !== 'granted') {
+                  alert('Enable push notifications to use the app!');
+                  await AsyncStorage.setItem('expopushtoken', "");
+                  return;
+                }
+                const token = (await Notifications.getExpoPushTokenAsync()).data;
+                await AsyncStorage.setItem('expopushtoken', token);
+            } else {
+              alert('Must use physical device for Push Notifications');
+            }
+      
+              if (Platform.OS === 'android') {
+                Notifications.setNotificationChannelAsync('default', {
+                  name: 'default',
+                  importance: Notifications.AndroidImportance.MAX,
+                  vibrationPattern: [0, 250, 250, 250],
+                  lightColor: '#FF231F7C',
+                });
+              }
+          }
+      
+          getPermission();
+      
+          notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            setNotification(notification);
+          });
+      
+          responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {});
+      
+          return () => {
+            Notifications.removeNotificationSubscription(notificationListener.current);
+            Notifications.removeNotificationSubscription(responseListener.current);
+          };
     }, [isEdit])
 
 
@@ -192,6 +243,23 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         setSelectColors(false)
     }
 
+    async function scheduleNotification() {
+        setIsBells(false)
+
+        // Set up the notification payload
+        let notificationId = await Notifications.scheduleNotificationAsync({
+          content: {
+            title: note.title,
+            body: "You have a reminder for the note",
+          },
+          trigger: {
+            seconds: Math.floor((dateTime.getTime() - Date.now()) / 1000),
+          },
+        });
+    
+        Alert.alert('Scheduled notification with id:', notificationId);
+      }
+
     return (
         <>
         <StatusBar hidden/>
@@ -256,7 +324,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                     date={date} 
                     onClickDate = {()=>showMode('date')} 
                     onClickTime = {()=>showMode('time')} 
-                    onSubmit={handleOnDateTime} />}
+                    onSubmit={scheduleNotification} />}
 
                 {
                     selectColors && <SelectColor onPress={onHandleColor}/>
