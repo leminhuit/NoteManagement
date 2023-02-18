@@ -53,8 +53,8 @@ const NoteScreen = ({user, navigation }) => {
     })
 
     // Xử lí việc tạo Note mới và lưu Note đó trong danh sách những Notes đã lưu
-    const handleOnSubmit = async (title, desc,isPushpin) => {
-        const note = {id: Date.now(), title, desc, time: Date.now(),isPushpin: false };
+    const handleOnSubmit = async (title, desc,date,color) => {
+        const note = {id: Date.now(), title, desc, time: Date.now(),isPushpin: false, date : date,color: color };
         const updatedNotes = [...notes, note];
         setNotes(updatedNotes)
         await AsyncStorage.setItem('notes', JSON.stringify(updatedNotes))
@@ -145,7 +145,7 @@ const NoteScreen = ({user, navigation }) => {
                             columnWrapperStyle={{justifyContent: 'space-between', marginBottom: 15}} 
                             keyExtractor={item => item.id.toString()} 
                             
-                            renderItem={({item}) => <Note onPress={() => openNote(item)} item = {item} onPressPush={()=>handleOnPressPush(item)}/>} />
+                            renderItem={({item}) => <Note styles={{backgroundColor: item.color.toString()}} onPress={() => openNote(item)} item = {item} onPressPush={()=>handleOnPressPush(item)}/>} />
                         </View>
                     }
 

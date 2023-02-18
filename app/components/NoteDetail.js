@@ -1,5 +1,5 @@
-import React, { Component, useRef, useState } from 'react'
-import { Text, StyleSheet, View, ScrollView, Alert } from 'react-native'
+import React, { Component, useRef, useState, useEffect } from 'react'
+import { Text, StyleSheet, View, ScrollView, Alert, LogBox } from 'react-native'
 import { useHeaderHeight } from '@react-navigation/elements'
 import colors from '../misc/colors'
 import RoundIconBtn from './RoundIconBtn';
@@ -14,7 +14,9 @@ import {
   RichToolbar,
 } from "react-native-pell-rich-editor";
 /////////////////////////////////////////////////
-
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+]);
 // Xử lý việc lưu lại ngày ghi chú
 const formatDate = ms => {
   const date = new Date(ms)
@@ -36,7 +38,7 @@ const NoteDetail = (props) => {
     const {setNotes} = useNotes()
     const [showModal, setShowModal] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
-
+    const [textNotify, setTextNotify] = useState('')
     /////////////////////////////////////////////////
     const richText = useRef();
     /////////////////////////////////////////////////
@@ -69,7 +71,7 @@ const NoteDetail = (props) => {
     // Problem arise when we updated the note during use
     // *************************************************
 
-    const handleUpdate = async (title, desc, time) => {
+    const handleUpdate = async (title, desc, date,color,time) => {
       const result = await AsyncStorage.getItem('notes')
       let notes = []
       if (result !== null) notes = JSON.parse(result)
@@ -79,7 +81,9 @@ const NoteDetail = (props) => {
           n.desc = desc
           n.isUpdated = true
           n.time = time
-
+          n.date = date
+          n.color = color
+          contentNotify(n)
           setNote(n)
         }
         return n;
@@ -94,7 +98,27 @@ const NoteDetail = (props) => {
     const openEditModal = () => {
       setIsEdit(true)
       setShowModal(true)
+      console.log(note)
     }
+
+    //////////////Notify////////////// 
+    const contentNotify = (n) =>{
+      const date = n.date
+      if (date){
+        const newDate = new Date(date)
+        let fDate = newDate.getDate() + '/' + (newDate.getMonth() + 1) + '/' + newDate.getFullYear();
+        
+        let fTime = newDate.getHours() + ':' + newDate.getMinutes()
+        setTextNotify(fTime + ' - ' + fDate)
+      }
+    }
+    //////////////////////////////////
+
+    useEffect(()=>{
+      contentNotify(note)
+      console.log(1)
+    },[])
+
 
     return (
       <>
@@ -128,8 +152,10 @@ const NoteDetail = (props) => {
             initialHeight={250}
           />
         </ScrollView>
+        {textNotify&&  <Text style={styles.contentNotifys}>Notify: {textNotify}</Text>}
+       
       </ScrollView>
-
+      
         <View style={styles.btnContainer}>
             <RoundIconBtn antIconName='delete' style={{backgroundColor: colors.ERROR, 
               marginBottom: 15}} onPress={displayDeleteAlert}/>
@@ -187,6 +213,11 @@ const styles = StyleSheet.create({
       borderTopRightRadius: 10,
       borderWidth: 1,
     },
+    contentNotifys:{
+      fontWeight: 'bold',
+      textAlign: 'right',
+      color: "#888"
+    }
 })
 
 export default NoteDetail;
