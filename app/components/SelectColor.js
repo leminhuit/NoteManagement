@@ -1,14 +1,15 @@
 import { Button, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import colors from '../misc/colors.js'
 
 const SelectColor = ({style,onPress}) => {
+  const [color, setColor] = useState('')
   return (
     <View style={styles.container}>
-      <Text style={[style,{...styles.colorBLUE}]}></Text>
-      <Text style={[style,{...styles.colorGREEN}]}></Text>
-      <Text style={[style,{...styles.colorRED}]}></Text>
-      <Text style={[style,{...styles.colorBROWN}]}></Text>
+      <Text style={[style,{...styles.colorBLUE}]} onPress = {onPress} key = "blue" ></Text>
+      <Text style={[style,{...styles.colorGREEN}]} onPress = {onPress} key = "green"></Text>
+      <Text style={[style,{...styles.colorRED}]} onPress = {onPress} key = "red"></Text>
+      <Text style={[style,{...styles.colorBROWN}]} onPress = {onPress} key = "brown"></Text>
     </View>
   )
 }

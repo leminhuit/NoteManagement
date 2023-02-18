@@ -29,7 +29,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
     // Desc dùng để lưu trữ nội dung của note
     const [desc, setDesc] = useState('');
 
-    const [date,setDate] = useState(new Date());
+    const [date,setDate] = useState('');
     const [mode, setMode] = useState('datetime')
     const [show, setShow] = useState(false)
     const [text, setText] = useState('')
@@ -40,17 +40,17 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
     const [color, setColor] = useState(colors.PRIMARY)
 
 
-    const onChange = (event, selectedDate)=>{
-        const currentDate = selectedDate || date
-        setShow(Platform.OS == 'ios')
-        setDate(currentDate)
+    function onChange(event, selectedDate) {
+        const currentDate = selectedDate || date;
+        setShow(Platform.OS == 'ios');
+        setDate(currentDate);
 
-        let tempDate = new Date(currentDate)
+        let tempDate = new Date(currentDate);
         let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
-        let fTime = tempDate.getHours() + ':' + tempDate.getMinutes()
-        setText(fDate + ' - ' + fTime)
+        let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
+        setText(fDate + ' - ' + fTime);
 
-        console.log(fDate + ' - ' + fTime)
+        console.log(fDate + ' - ' + fTime);
     }
 
     const showMode = (currentMode) =>{
@@ -85,23 +85,32 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         if (!title.trim() && !desc.trim()) {
             setText('')
             setSelectColors(false)
+            setColor(colors.PRIMARY)
             return onClose();
         }
 //////////////////////////////////////////////////// thêm bells
         if (isEdit) {
             console.log("Im here")
-            onSubmit(title, desc,date, Date.now())
+            onSubmit(title, desc,date,color, Date.now())
         }
         else{
-            console.log("Now Im here")
-            onSubmit(title, desc,date);
+            console.log("Now Im here",date)
+            onSubmit(title, desc,date,color);
             setTitle('');
             setDesc('');
+            setDate('')
+            console.log(date)
             setSelectColors(false)
+            setColor(colors.PRIMARY)
         }
         setText('')
         onClose();
     };
+
+    const handleOnPressBell = ()=>{
+        setIsBells(true)
+        setDate(new Date())
+    }
     /////////////////////////////////////////////////
 
     // Xử lý việc đóng bàn phím khi ấn vào vùng trống của Modal
@@ -168,6 +177,21 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         console.log("notify")
     }
 
+    const onHandleColor = (e) =>{
+        const se_colors = e._dispatchInstances._debugOwner.key
+        if (se_colors === 'blue')
+            setColor(colors.BLUE)
+        else if (se_colors === 'red')
+            setColor(colors.RED)
+        else if (se_colors === 'green')
+            setColor(colors.GREEN)
+        else if (se_colors === 'brown')
+            setColor(colors.BROWN)
+        else
+            setColor(colors.PRIMARY)
+        setSelectColors(false)
+    }
+
     return (
         <>
         <StatusBar hidden/>
@@ -226,8 +250,8 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
             <TouchableWithoutFeedback onPress={handleModalClose}>
                 <View style={[styles.modalBG, StyleSheet.absoluteFillObject]}/>
             </TouchableWithoutFeedback>
-            <RoundIconBtn antIconName='bells' style={styles.bells} onPress={()=>setIsBells(true)}/>
-            <RoundIconBtn_Found antIconName='paint-bucket' style={styles.Colors} onPress = {()=>selectColors ? setSelectColors(false) : setSelectColors(true)}/>
+            <RoundIconBtn antIconName='bells' style={styles.bells} onPress={handleOnPressBell}/>
+            <RoundIconBtn_Found antIconName='paint-bucket' style={{backgroundColor: color}} onPress = {()=>selectColors ? setSelectColors(false) : setSelectColors(true)}/>
                 {isbells && <Bells_ 
                     date={date} 
                     onClickDate = {()=>showMode('date')} 
@@ -235,7 +259,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                     onSubmit={handleOnDateTime} />}
 
                 {
-                    selectColors && <SelectColor/>
+                    selectColors && <SelectColor onPress={onHandleColor}/>
                 }
             
             <Text style={styles.bellText}>{text}</Text>
@@ -315,13 +339,9 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: colors.PRIMARY
     },
-    Colors: {
-        position: 'absolute',
-        right: 15,
-        bottom: 100,
-        zIndex: 1,
-    }
+    
     ////////////////////////////////
 })
 
 export default NoteInputModal;
+

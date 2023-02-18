@@ -6,12 +6,12 @@ import Pushpin from './Pushpin.js';
 // Component xử lý việc hiển thị note trong màn hình chính và 
 // kết nối với NoteDetail khi ấn vào
 const Note = ({item, onPress,onPressPush}) => {
-    const {title, desc,isPushpin} = item;
+    const {title, desc,isPushpin,color} = item;
 
     const replaceHTML = desc.replace(/<(.|\n)*?>/g, "").trim();
     const replaceWhiteSpace = replaceHTML.replace(/&nbsp;/g, "").trim();
     return (
-      <TouchableOpacity onPress={onPress} style={styles.container}>
+      <TouchableOpacity onPress={onPress} style={[styles.container,{backgroundColor: color}]}>
         <Text style={styles.title} numberOfLines={2}>{title}</Text>
 
         {
@@ -28,7 +28,7 @@ const width = Dimensions.get('window').width - 40
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.PRIMARY,
+        // backgroundColor: colors.PRIMARY,
         width: width / 2 - 10,
         padding: 8,
         borderRadius: 10,
