@@ -238,7 +238,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                     onChangeText={text => handleOnChangeText(text, 'desc')}
                 /> */}
 
-                <ScrollView style={{height: "70%",backgroundColor: noteColor || color}}>
+                <ScrollView style={{height: "100%",backgroundColor: noteColor || color}}>
                     <RichToolbar
                         editor={richText}
                         selectedIconTint="#873c1e"
@@ -265,15 +265,8 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                     />
                 </ScrollView>
 
-                <View style={styles.btnContainer}>
-                    <RoundIconBtn size={15} antIconName='check' onPress={submitContentHandle}/>
-                    { title.trim() || desc.trim() ? (<RoundIconBtn size={15} 
-                    style={{marginLeft: 15}} antIconName='close' onPress={closeModal}/>) : null}
-                    
-                </View>
-            <RoundIconBtn antIconName='bells' style={styles.bells} onPress={handleOnPressBell}/>
-            <RoundIconBtn_Found antIconName='paint-bucket' style={{backgroundColor: "#FFF",color: "#000", ...styles.paint}} onPress = {()=>selectColors ? setSelectColors(false) : setSelectColors(true)}/>
-                {isbells && <Bells_ 
+                
+               {isbells && <Bells_ 
                     date={date} 
                     onClickDate = {()=>showMode('date')} 
                     onClickTime = {()=>showMode('time')} 
@@ -302,7 +295,17 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                     <Text style={{fontSize: 20, fontWeight: 'bold', color: "#D37D84", marginLeft: 10}}>Hình nền</Text>
                 </View>
             }
-            
+            <View style={styles.footer}>
+                <RoundIconBtn_Found antIconName='paint-bucket' style={{backgroundColor: "#FFF",color: "#000", ...styles.paint}} onPress = {()=>selectColors ? setSelectColors(false) : setSelectColors(true)}/>
+                <View style={styles.btnContainer}>
+                    <RoundIconBtn style={{color: colors.DARK, backgroundColor: colors.LIGHT}} size={15} antIconName='check' onPress={submitContentHandle}/>
+                    { title.trim() || desc.trim() ? (<RoundIconBtn size={15} 
+                    style={{marginLeft: 15, color: colors.DARK, backgroundColor: colors.LIGHT}} antIconName='close' onPress={closeModal}/>) : null}
+                    
+                </View>
+                <RoundIconBtn antIconName='bells' style={styles.bells} onPress={handleOnPressBell}/>
+             
+            </View>
         </Modal>
         
         </>
@@ -319,7 +322,8 @@ const styles = StyleSheet.create({
         bottom: 0,
         height: "24%",
         width: "100%",
-        backgroundColor: "#FFF"
+        backgroundColor: "#FFF",
+        zIndex: 2
     },
     input: {
         borderBottomWidth: 2,
@@ -342,7 +346,9 @@ const styles = StyleSheet.create({
     btnContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        paddingVertical: 15,
+        alignItems: "center",
+        maxWidth: 100,
+        maxHeight: 60,
     },
     ////////////////////////////////
     richTextToolbarStyle: {
@@ -353,7 +359,9 @@ const styles = StyleSheet.create({
         bottom: 0,
         zIndex: 1,
         width: 54,
-        marginLeft: "81%"
+        maxHeight: 54,
+        color: colors.DARK,
+        backgroundColor: "#FFF"
     },
     bellText:{
         position: 'relative',
@@ -365,14 +373,23 @@ const styles = StyleSheet.create({
     },
     paint:{
         position: 'relative',
-        bottom: 120,
+        bottom: 0,
         zIndex: 1,
         width: 54,
-        marginLeft: "85%"
+        maxHeight: 54,
+        marginLeft: 10,
+        backgroundColor: "#fff"
     },
-    selectColorStyle:{
-        
-    }
+    footer:{
+        height: 60,
+        width: "100%",
+        zIndex: 1,
+        position: 'absolute',
+        bottom: 0,
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-around'
+    },
     
     ////////////////////////////////
 })

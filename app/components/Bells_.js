@@ -26,16 +26,18 @@ export default Bells_
 
 const styles = StyleSheet.create({
     container:{
-        height: "40%",
+        height: "30%",
         width:"50%",
         zIndex: 1,
         position: 'absolute',
         left: "25%",
         top: "30%",
-        backgroundColor: '#eee',
+        backgroundColor: '#FFF',
         flex:1,
         justifyContent:'center',
         alignItems: 'center',
+        elevation: 5,
+        borderRadius: 14
     },
     DateTime:{
       fontSize: 20,

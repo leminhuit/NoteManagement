@@ -8,7 +8,7 @@ const RoundIconBtn_Found = ({antIconName, size, color, style, onPress}) => {
     return <Foundation 
     name={antIconName} 
     size={size || 24} 
-    color={color || colors.LIGHT}
+    color={color || colors.DARK}
     style={[styles.icon, {...style}]}
     onPress= {onPress}
     />
