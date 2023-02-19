@@ -51,12 +51,9 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         var noteColor = note.color
     }
     function onChange(event, selectedDate) {
-        console.log("selected",selectedDate)
         const currentDate = selectedDate || date;
-        console.log("curr",currentDate)
         setShow(Platform.OS == 'ios');
         setDate(currentDate);
-
         if (selectedDate) {
             if (selectedDate < new Date()) {
                 selectedDate = new Date();
@@ -82,6 +79,8 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
     const richText = useRef();
 
     const richTextHandle = (descriptionText) => {
+        console.log("descriptionText", descriptionText)
+        console.log("desc", desc)
         if (descriptionText) {
           setDesc(descriptionText);
         } else {
@@ -97,6 +96,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
             setText('')
             setSelectColors(false)
             setColor("#FFF")
+            setDate('')
             return onClose();
         }
 //////////////////////////////////////////////////// thêm bells
@@ -119,6 +119,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
     };
 
     const handleOnPressBell = ()=>{
+        Keyboard.dismiss();
         setIsBells(true)
         setDate(date || new Date())
     }
@@ -126,6 +127,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
 
     // Xử lý việc đóng bàn phím khi ấn vào vùng trống của Modal
     const handleModalClose = () => {
+        setSelectColors(false)
         Keyboard.dismiss();
     }
 
@@ -134,7 +136,9 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         if (isEdit) {
             setTitle(note.title)
             setDesc(note.desc)
+            setColor(note.color)
         };
+        console.log("one")
         const getPermission = async () => {
             if (Device.isDevice) {
                 const { status: existingStatus } = await Notifications.getPermissionsAsync();
@@ -190,6 +194,8 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         if (!isEdit) {
             setTitle('');
             setDesc('');
+            setColor("#FFF")
+            setDate('')
         }
         onClose();
     }
@@ -197,6 +203,9 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
 
     const onHandleColor = (e) =>{
         const se_colors = e._dispatchInstances._debugOwner.key
+        console.log("se_color NoteInputModal line 204",se_colors)
+        console.log("color NoteInputModal line 205",color)
+        note.color = se_colors
         setColor(se_colors)
         setSelectColors(false)
     }
@@ -285,6 +294,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
             <TouchableWithoutFeedback onPress={handleModalClose}>
                 <View style={[styles.modalBG, StyleSheet.absoluteFillObject]}/>
             </TouchableWithoutFeedback>
+
             {show && (<DateTimePicker
                 testID='dateTimePicker'
                 value={date}
@@ -295,13 +305,13 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
             />)}
             </View>
             {/* <Text style={styles.bellText}>{text}</Text> */}
-            
             {
                 selectColors && 
                 <View style={styles.colorContainer}>
                     <Text style={{fontSize: 20, fontWeight: 'bold', color: "#D37D84", marginLeft: 10}}>Màu</Text>
                     <SelectColor onPress={onHandleColor}/>
                     <Text style={{fontSize: 20, fontWeight: 'bold', color: "#D37D84", marginLeft: 10}}>Hình nền</Text>
+                    
                 </View>
             }
             <View style={styles.footer}>

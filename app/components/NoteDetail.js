@@ -88,7 +88,7 @@ const NoteDetail = (props) => {
         }
         return n;
       })
-      
+      console.log("\nnewNote -- detail line 91: ",newNotes)
       setNotes(newNotes)
       await AsyncStorage.setItem('notes', JSON.stringify(newNotes))
     };
@@ -98,7 +98,6 @@ const NoteDetail = (props) => {
     const openEditModal = () => {
       setIsEdit(true)
       setShowModal(true)
-      console.log(note)
     }
 
     //////////////Notify////////////// 
@@ -129,22 +128,6 @@ const NoteDetail = (props) => {
         {/* <Text style={styles.desc}>{note.desc}</Text> */}
         
         <ScrollView>
-          {/* <RichToolbar 
-            editor={richText}
-            selectedIconTint="#873c1e"
-            iconTint="#312921"
-            actions={[
-            actions.insertImage,
-            actions.setBold,
-            actions.setItalic,
-            actions.insertBulletsList,
-            actions.insertOrderedList,
-            actions.insertLink,
-            actions.setStrikethrough,
-            actions.setUnderline,
-            ]}
-            style={styles.richTextToolbarStyle} /> */}
-
           <RichEditor
             // ref={richText}
             initialContentHTML={note.desc}

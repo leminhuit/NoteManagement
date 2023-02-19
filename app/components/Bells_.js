@@ -28,7 +28,7 @@ export default Bells_
 const styles = StyleSheet.create({
     container:{
         height: "30%",
-        width:"50%",
+        width:"70%",
         zIndex: 1,
         position: 'absolute',
         left: "25%",
