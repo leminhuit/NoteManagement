@@ -1,11 +1,14 @@
 import React, { Component, useEffect, useRef, useState } from 'react'
-import { Text, StyleSheet, View, Modal, Keyboard, StatusBar, TextInput, TouchableWithoutFeedback, ScrollView, Platform } from 'react-native'
+import { Text, StyleSheet, View, Modal, Keyboard, StatusBar, TextInput, TouchableWithoutFeedback, ScrollView, Platform, Alert  } from 'react-native'
 import colors from '../misc/colors'
 import RoundIconBtn from "../components/RoundIconBtn";
 import RoundIconBtn_Found from "../components/RoundIconBtn_Found";
 import DateTimePicker from '@react-native-community/datetimepicker'
 import Bells_ from './Bells_.js';
 import SelectColor from './SelectColor.js'
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /////////////////////////////////////////////////
 import {
@@ -34,6 +37,10 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
     const [show, setShow] = useState(false)
     const [text, setText] = useState('')
     const [isbells, setIsBells] = useState(false)
+    const [dateTime, setDateTime] = useState(new Date());
+    const [notification, setNotification] = useState(false);
+    const notificationListener = useRef();
+    const responseListener = useRef();
 
     // ---------- select color
     const [selectColors, setSelectColors] = useState(false)
@@ -45,12 +52,20 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         setShow(Platform.OS == 'ios');
         setDate(currentDate);
 
-        let tempDate = new Date(currentDate);
-        let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
-        let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
-        setText(fDate + ' - ' + fTime);
-
-        console.log(fDate + ' - ' + fTime);
+        if (selectedDate) {
+            if (selectedDate < new Date()) {
+                selectedDate = new Date();
+                Alert.alert('Please select a future date and time');
+            }
+            let tempDate = new Date(currentDate);
+            let fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
+            let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
+            setText(fDate + ' - ' + fTime);
+            
+            console.log(fDate + ' - ' + fTime);
+    
+            setDateTime(selectedDate);
+        }     
     }
 
     const showMode = (currentMode) =>{
@@ -123,7 +138,48 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         if (isEdit) {
             setTitle(note.title)
             setDesc(note.desc)
-        }
+        };
+        const getPermission = async () => {
+            if (Device.isDevice) {
+                const { status: existingStatus } = await Notifications.getPermissionsAsync();
+                let finalStatus = existingStatus;
+                if (existingStatus !== 'granted') {
+                  const { status } = await Notifications.requestPermissionsAsync();
+                  finalStatus = status;
+                }
+                if (finalStatus !== 'granted') {
+                  alert('Enable push notifications to use the app!');
+                  await AsyncStorage.setItem('expopushtoken', "");
+                  return;
+                }
+                const token = (await Notifications.getExpoPushTokenAsync()).data;
+                await AsyncStorage.setItem('expopushtoken', token);
+            } else {
+              alert('Must use physical device for Push Notifications');
+            }
+      
+              if (Platform.OS === 'android') {
+                Notifications.setNotificationChannelAsync('default', {
+                  name: 'default',
+                  importance: Notifications.AndroidImportance.MAX,
+                  vibrationPattern: [0, 250, 250, 250],
+                  lightColor: '#FF231F7C',
+                });
+              }
+          }
+      
+          getPermission();
+      
+          notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            setNotification(notification);
+          });
+      
+          responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {});
+      
+          return () => {
+            Notifications.removeNotificationSubscription(notificationListener.current);
+            Notifications.removeNotificationSubscription(responseListener.current);
+          };
     }, [isEdit])
 
 
@@ -179,24 +235,43 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
 
     const onHandleColor = (e) =>{
         const se_colors = e._dispatchInstances._debugOwner.key
-        if (se_colors === 'blue')
-            setColor(colors.BLUE)
-        else if (se_colors === 'red')
-            setColor(colors.RED)
-        else if (se_colors === 'green')
-            setColor(colors.GREEN)
-        else if (se_colors === 'brown')
-            setColor(colors.BROWN)
-        else
-            setColor(colors.PRIMARY)
+        setColor(se_colors)
+        // if (se_colors === 'blue')
+        //     setColor(colors.BLUE)
+        // else if (se_colors === 'red')
+        //     setColor(colors.RED)
+        // else if (se_colors === 'green')
+        //     setColor(colors.GREEN)
+        // else if (se_colors === 'brown')
+        //     setColor(colors.BROWN)
+        // else
+        //     setColor(colors.PRIMARY)
         setSelectColors(false)
     }
 
+    async function scheduleNotification() {
+        setIsBells(false)
+        // Set up the notification payload
+        let notificationId = await Notifications.scheduleNotificationAsync({
+          content: {
+            title: title,
+            body: `You have a reminder for the note `,
+          },
+          trigger: {
+            seconds: Math.floor((dateTime.getTime() - Date.now()) / 1000),
+          },
+        });
+    
+        Alert.alert('Scheduled notification with id:', notificationId);
+      }
+      const styleEditor = {
+        backgroundColor: color
+      }
     return (
         <>
         <StatusBar hidden/>
         <Modal visible={visible} animationType='fade'>
-            <View style={styles.container}>
+            <View style={{backgroundColor: color,...styles.container}}>
                 <TextInput
                     value={title}
                     onChangeText={text => handleOnChangeText(text, 'title')}
@@ -212,7 +287,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                     onChangeText={text => handleOnChangeText(text, 'desc')}
                 /> */}
 
-                <ScrollView>
+                <ScrollView style={{height: "70%",backgroundColor: color}}>
                     <RichToolbar
                         editor={richText}
                         selectedIconTint="#873c1e"
@@ -234,8 +309,8 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                         initialContentHTML={desc}
                         onChange={richTextHandle}
                         placeholder="Write your cool content here :)"
-                        style={styles.richTextEditorStyle}
                         initialHeight={250}
+                        editorStyle = {styleEditor}
                     />
                 </ScrollView>
 
@@ -245,24 +320,18 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                     style={{marginLeft: 15}} antIconName='close' onPress={closeModal}/>) : null}
                     
                 </View>
-            </View>
-
-            <TouchableWithoutFeedback onPress={handleModalClose}>
-                <View style={[styles.modalBG, StyleSheet.absoluteFillObject]}/>
-            </TouchableWithoutFeedback>
             <RoundIconBtn antIconName='bells' style={styles.bells} onPress={handleOnPressBell}/>
-            <RoundIconBtn_Found antIconName='paint-bucket' style={{backgroundColor: color}} onPress = {()=>selectColors ? setSelectColors(false) : setSelectColors(true)}/>
+            <RoundIconBtn_Found antIconName='paint-bucket' style={{backgroundColor: "#fff",color: "#000", ...styles.paint}} onPress = {()=>selectColors ? setSelectColors(false) : setSelectColors(true)}/>
                 {isbells && <Bells_ 
                     date={date} 
                     onClickDate = {()=>showMode('date')} 
                     onClickTime = {()=>showMode('time')} 
-                    onSubmit={handleOnDateTime} />}
-
-                {
-                    selectColors && <SelectColor onPress={onHandleColor}/>
-                }
+                    onSubmit={scheduleNotification} />}
+           
             
-            <Text style={styles.bellText}>{text}</Text>
+            <TouchableWithoutFeedback onPress={handleModalClose}>
+                <View style={[styles.modalBG, StyleSheet.absoluteFillObject]}/>
+            </TouchableWithoutFeedback>
             {show && (<DateTimePicker
                 testID='dateTimePicker'
                 value={date}
@@ -271,7 +340,20 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                 display = 'default'
                 onChange={onChange}
             />)}
+            </View>
+            <Text style={styles.bellText}>{text}</Text>
+            
+            {
+                selectColors && 
+                <View style={styles.colorContainer}>
+                    <Text style={{fontSize: 20, fontWeight: 'bold', color: "#D37D84", marginLeft: 10}}>Màu</Text>
+                    <SelectColor onPress={onHandleColor}/>
+                    <Text style={{fontSize: 20, fontWeight: 'bold', color: "#D37D84", marginLeft: 10}}>Hình nền</Text>
+                </View>
+            }
+            
         </Modal>
+        
         </>
 )}
 
@@ -279,6 +361,14 @@ const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 20,
         paddingTop: 15,
+        width: "100%",
+    },
+    colorContainer:{
+        position: "absolute",
+        bottom: 0,
+        height: "24%",
+        width: "100%",
+        backgroundColor: "#fff"
     },
     input: {
         borderBottomWidth: 2,
@@ -304,41 +394,34 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
     },
     ////////////////////////////////
-    richTextEditorStyle: {
-        borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10,
-        borderWidth: 1,
-        borderColor: "#ccaf9b",
-        shadowColor: "#000",
-        shadowOffset: {
-        width: 0,
-        height: 2,
-        },
-        shadowOpacity: 0.23,
-        shadowRadius: 2.62,
-        elevation: 4,
-        fontSize: 20,
-    },
     richTextToolbarStyle: {
-        backgroundColor: "#c6c3b3",
-        borderColor: "#c6c3b3",
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        borderWidth: 1,
+        backgroundColor: "#fff",
     },
     bells:{
-        position: 'absolute',
-        right: 15,
-        bottom: 30,
+        position: 'relative',
+        bottom: 0,
         zIndex: 1,
+        width: 54,
+        marginLeft: "81%"
     },
     bellText:{
-        position: 'absolute',
-        right: 90,
-        bottom: 65,
+        position: 'relative',
+        right: 0,
+        bottom: 96,
         fontSize: 20,
-        color: colors.PRIMARY
+        color: colors.PRIMARY,
+        marginLeft: "24%",
     },
+    paint:{
+        position: 'relative',
+        bottom: 120,
+        zIndex: 1,
+        width: 54,
+        marginLeft: "85%"
+    },
+    selectColorStyle:{
+        
+    }
     
     ////////////////////////////////
 })
