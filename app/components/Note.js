@@ -7,12 +7,12 @@ import Pushpin from './Pushpin.js';
 // kết nối với NoteDetail khi ấn vào
 const Note = ({item, onPress,onPressPush}) => {
     const {title, desc,isPushpin,color} = item;
-
+    const black = color === "#FFF" ? colors.DARK : colors.LIGHT
     const replaceHTML = desc.replace(/<(.|\n)*?>/g, "").trim();
     const replaceWhiteSpace = replaceHTML.replace(/&nbsp;/g, "").trim();
     return (
       <TouchableOpacity onPress={onPress} style={[styles.container,{backgroundColor: color}]}>
-        <Text style={styles.title} numberOfLines={2}>{title}</Text>
+        <Text style={{color: black,...styles.title }} numberOfLines={2}>{title}</Text>
 
         {
           isPushpin===true?<Pushpin antIconName='pushpin' style={styles.addPushpin} onPress={onPressPush}/>:
@@ -36,7 +36,6 @@ const styles = StyleSheet.create({
     title: {
         fontWeight: 'bold',
         fontSize: 16,
-        color: colors.LIGHT,
     },
     addPushpin:{
       position: 'absolute',
