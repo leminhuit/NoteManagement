@@ -205,7 +205,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         const se_colors = e._dispatchInstances._debugOwner.key
         console.log("se_color NoteInputModal line 204",se_colors)
         console.log("color NoteInputModal line 205",color)
-        note.color = se_colors
+        noteColor = se_colors
         setColor(se_colors)
         setSelectColors(false)
     }
@@ -264,6 +264,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                         actions.insertImage,
                         actions.setBold,
                         actions.setItalic,
+                        actions.checkboxList,
                         actions.insertBulletsList,
                         actions.insertOrderedList,
                         actions.insertLink,

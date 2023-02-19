@@ -1,8 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
-import {View, StyleSheet, TextInput, Text, Dimensions, StatusBar} from 'react-native';
+import {View, StyleSheet, TextInput, Text, Dimensions, StatusBar, ImageBackground} from 'react-native';
 import RoundIconBtn from "../components/RoundIconBtn";
 import colors from '../misc/colors'
+
+const imbackground = {uri: 'https://e0.pxfuel.com/wallpapers/3/666/desktop-wallpaper-most-definitely-has-already-been-posted-a-long-time-ago-but-this-is-from-firewatch-iphone-x-iphone-x.jpg'}
 
 // Màn hình intro khi lần đầu sử dụng app
 const Intro = ({onFinish}) => {
@@ -21,6 +23,7 @@ const Intro = ({onFinish}) => {
 
     return (
         <>
+        <ImageBackground source={imbackground} resizeMode={'cover'} style={{flex: 1, }}>
         <StatusBar hidden />
         <View style={styles.container}>
             <Text style={styles.inputTitle}>Enter Your Name to Continue</Text>
@@ -36,6 +39,7 @@ const Intro = ({onFinish}) => {
                 <RoundIconBtn antIconName='arrowright'  onPress={handleSubmit}/>
             ) : null}
         </View> 
+        </ImageBackground>
         </>
     )
 }

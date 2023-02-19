@@ -1,0 +1,177 @@
+[33mcommit 1edf23aa63be401b056b9b1c750b07bacee26dab[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: LongVuBui <connhalong19@gmail.com>
+Date:   Sun Feb 19 22:52:14 2023 +0700
+
+     adding checkbox - todolist
+
+[33mcommit 88f9d67081254622415112e6543fd01bcbee7792[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: 87d1153 920ca71
+Author: leminhuit <79295048+leminhuit@users.noreply.github.com>
+Date:   Sun Feb 19 21:26:07 2023 +0700
+
+    Merge pull request #7 from truongvanchinh/Tvchinh
+    
+    fix bugggggg
+
+[33mcommit 920ca71c08f00713f77f16934ba2d5a59222c4a0[m
+Author: vanchinh12042002 <truongchinh708@gmail.com>
+Date:   Sun Feb 19 21:04:53 2023 +0700
+
+    fix bugggggg
+
+[33mcommit 87d1153554ffe088782d31511ead422bad9fca00[m
+Merge: dc28942 a9fb895
+Author: leminhuit <79295048+leminhuit@users.noreply.github.com>
+Date:   Sun Feb 19 17:15:59 2023 +0700
+
+    Merge pull request #6 from truongvanchinh/Tvchinh
+    
+    fix bug time notify
+
+[33mcommit a9fb8952154a164fa4f8b92ed272a1687a7cd702[m
+Author: vanchinh12042002 <truongchinh708@gmail.com>
+Date:   Sun Feb 19 17:00:39 2023 +0700
+
+    fix bug time notify
+
+[33mcommit dc2894242f8db0581c16b85acb73ffa7dd1e9aef[m
+Merge: 57bdd88 ca90392
+Author: leminhuit <79295048+leminhuit@users.noreply.github.com>
+Date:   Sun Feb 19 16:31:32 2023 +0700
+
+    Merge pull request #5 from truongvanchinh/Tvchinh
+    
+    fix bug color
+
+[33mcommit ca90392422d4629afeb480db2e6c94a84f2f11a8[m
+Author: vanchinh12042002 <truongchinh708@gmail.com>
+Date:   Sun Feb 19 16:22:14 2023 +0700
+
+    Thay doi giao dien input
+
+[33mcommit e36923579fe8ee659196e299e866be6df64f1887[m
+Author: vanchinh12042002 <truongchinh708@gmail.com>
+Date:   Sun Feb 19 15:45:46 2023 +0700
+
+    fix bug color
+
+[33mcommit 57bdd886bb475425b2f70de4ac38ece11f23c638[m
+Merge: 9b5abcb 9ed3eb3
+Author: leminhuit <79295048+leminhuit@users.noreply.github.com>
+Date:   Sun Feb 19 14:23:53 2023 +0700
+
+    Merge pull request #4 from truongvanchinh/Tvchinh
+    
+    change color
+
+[33mcommit 9ed3eb39aeb6469f0ef8ff8b58ed3a898b71a514[m
+Merge: 72f5cdb 9b5abcb
+Author: T.V.Chinh <105340398+truongvanchinh@users.noreply.github.com>
+Date:   Sun Feb 19 13:09:14 2023 +0700
+
+    Merge branch 'main' into Tvchinh
+
+[33mcommit 72f5cdb6c4e05400dad14027769113848b4c88c4[m
+Author: vanchinh12042002 <truongchinh708@gmail.com>
+Date:   Sun Feb 19 13:06:46 2023 +0700
+
+    change color
+
+[33mcommit 9b5abcb6dcc0743d192630504de20f73435718b9[m
+Author: leminhuit <20521599@gm.uit.edu.vn>
+Date:   Sat Feb 18 22:31:20 2023 +0700
+
+    Push lần 2 đề phòng chọn ngày đã qua
+
+[33mcommit 667bd70cea4925ce2f60c98af50622172c622dbb[m
+Author: leminhuit <20521599@gm.uit.edu.vn>
+Date:   Sat Feb 18 22:13:25 2023 +0700
+
+    Thêm notification cơ bản
+
+[33mcommit 7c85844c0bb3de658a84ca58ff9f9ada363205d7[m
+Merge: da73e89 20fa407
+Author: leminhuit <79295048+leminhuit@users.noreply.github.com>
+Date:   Sat Feb 18 16:12:31 2023 +0700
+
+    Merge pull request #3 from truongvanchinh/Tvchinh
+    
+    Tvchinh
+
+[33mcommit 20fa40701d671f89635781cc4da14d1bae8d3f86[m
+Author: vanchinh12042002 <truongchinh708@gmail.com>
+Date:   Sat Feb 18 09:34:47 2023 +0700
+
+    Change color note, update time notify, color
+
+[33mcommit eece7f3c0ce60a8d70228c434d71bc14ecde67de[m
+Author: vanchinh12042002 <truongchinh708@gmail.com>
+Date:   Fri Feb 17 22:39:58 2023 +0700
+
+    giao dien doi mau
+
+[33mcommit da73e89f375ac328ca52549c74c1d858f9ae72b6[m
+Merge: f701410 c1af1af
+Author: leminhuit <79295048+leminhuit@users.noreply.github.com>
+Date:   Fri Feb 10 09:46:37 2023 +0700
+
+    Merge pull request #2 from truongvanchinh/Tvchinh
+    
+    Thêm thong báo
+
+[33mcommit c1af1afa073ff0c4a2f309f4249101df447c68b3[m
+Author: vanchinh12042002 <truongchinh708@gmail.com>
+Date:   Thu Feb 9 20:35:59 2023 +0700
+
+    Thêm thong báo
+
+[33mcommit f70141068851c9c9dffbb87f68497919816e1632[m
+Merge: 3baf04f d14c9ee
+Author: leminhuit <79295048+leminhuit@users.noreply.github.com>
+Date:   Mon Feb 6 19:48:45 2023 +0700
+
+    Merge pull request #1 from truongvanchinh/Tvchinh
+    
+    test
+
+[33mcommit d14c9ee7f9783eaca1280f3f1bb091601e74a2b2[m
+Author: vanchinh12042002 <truongchinh708@gmail.com>
+Date:   Mon Feb 6 17:05:17 2023 +0700
+
+    ghim
+
+[33mcommit 1e0bebf38159c0ccc56ebc399c9a1bcb821cf412[m
+Author: vanchinh12042002 <truongchinh708@gmail.com>
+Date:   Sun Feb 5 15:04:51 2023 +0700
+
+    Thêm ghim
+
+[33mcommit a8874a971b10cb5fade5178cf15b49902fff628a[m
+Author: vanchinh12042002 <truongchinh708@gmail.com>
+Date:   Tue Jan 17 09:17:31 2023 +0700
+
+    test
+
+[33mcommit 3baf04ffa5b52192bc55bf45f0366837cddd3457[m
+Author: leminhuit <20521599@gm.uit.edu.vn>
+Date:   Thu Dec 22 10:07:40 2022 +0700
+
+    Fix crashing when moving between screens
+
+[33mcommit 42cedcd40581d6fb80a3cf7830df17ab73fd4911[m
+Author: leminhuit <20521599@gm.uit.edu.vn>
+Date:   Thu Dec 15 15:47:03 2022 +0700
+
+    Testing The Rich Note Editor
+
+[33mcommit 4d07415244e60b89b3a4cd59ef578c52d6fb3f9f[m
+Author: leminhuit <20521599@gm.uit.edu.vn>
+Date:   Thu Dec 15 10:43:54 2022 +0700
+
+    Add Comment to further explain the app
+
+[33mcommit 8a5bf55fe36e8905bff04b627e497a6a726177d5[m
+Author: leminhuit <20521599@gm.uit.edu.vn>
+Date:   Wed Dec 14 21:09:16 2022 +0700
+
+    first commit
