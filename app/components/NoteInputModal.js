@@ -264,6 +264,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                         actions.insertImage,
                         actions.setBold,
                         actions.setItalic,
+                        actions.checkboxList,
                         actions.insertBulletsList,
                         actions.insertOrderedList,
                         actions.insertLink,
