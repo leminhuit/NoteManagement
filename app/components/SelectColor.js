@@ -1,57 +1,26 @@
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { Button, FlatList, ScrollView, StyleSheet, Text, View,TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import colors from '../misc/colors.js'
+import colorBG from '../misc/backgroundColor.js'
 
 const SelectColor = ({style,onPress}) => {
-  const [color, setColor] = useState('')
+  const colors = Object.values(colorBG)
+  
+  
+  console.log(colors)
   return (
-    <View style={styles.container}>
-      <Text style={[style,{...styles.colorBLUE}]} onPress = {onPress} key = "blue" ></Text>
-      <Text style={[style,{...styles.colorGREEN}]} onPress = {onPress} key = "green"></Text>
-      <Text style={[style,{...styles.colorRED}]} onPress = {onPress} key = "red"></Text>
-      <Text style={[style,{...styles.colorBROWN}]} onPress = {onPress} key = "brown"></Text>
-    </View>
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} style ={{ maxHeight: 50}}>
+    {colors.map((color, index) => (
+      <TouchableOpacity key={index} style={{ height: 50}}>
+        <Text key = {color} onPress = {onPress} style={{borderWidth: 1,backgroundColor: color,width: 30, height: 30, borderRadius: 50, marginTop: 10, marginLeft: 10}}></Text>
+      </TouchableOpacity>
+    ))}
+    </ScrollView>
   )
 }
 
 export default SelectColor
 
 const styles = StyleSheet.create({
-    container:{
-        backgroundColor: "#ccc",
-        position: 'absolute',
-        bottom: 100,
-        width: 200,
-        height: 54,
-        right: 40,
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        paddingRight: 30,
-        borderRadius: 10
-    },
-    colorBLUE:{
-        backgroundColor: colors.BLUE,
-        width: 30,
-        height: 30,
-        borderRadius: 50,
-    },
-    colorGREEN:{
-        backgroundColor: colors.GREEN,
-        width: 30,
-        height: 30,
-        borderRadius: 50,
-    },
-    colorRED:{
-        backgroundColor: colors.RED,
-        width: 30,
-        height: 30,
-        borderRadius: 50,
-    },
-    colorBROWN:{
-        backgroundColor: colors.BROWN,
-        width: 30,
-        height: 30,
-        borderRadius: 50,
-    },
+    
 })
