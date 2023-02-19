@@ -51,7 +51,9 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         var noteColor = note.color
     }
     function onChange(event, selectedDate) {
+        console.log("selected",selectedDate)
         const currentDate = selectedDate || date;
+        console.log("curr",currentDate)
         setShow(Platform.OS == 'ios');
         setDate(currentDate);
 
@@ -118,7 +120,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
 
     const handleOnPressBell = ()=>{
         setIsBells(true)
-        setDate(new Date())
+        setDate(date || new Date())
     }
     /////////////////////////////////////////////////
 
@@ -201,6 +203,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
 
     async function scheduleNotification() {
         setIsBells(false)
+        setDate(date)
         // Set up the notification payload
         let notificationId = await Notifications.scheduleNotificationAsync({
           content: {
@@ -213,6 +216,11 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         });
     
         Alert.alert('Scheduled notification with id:', notificationId);
+      }
+
+      const handleOnClose = () =>{
+        setDate(date),
+        setIsBells(false)
       }
 
       const styleEditor = {
@@ -270,8 +278,9 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                     date={date} 
                     onClickDate = {()=>showMode('date')} 
                     onClickTime = {()=>showMode('time')} 
-                    onSubmit={scheduleNotification} />}
-           
+                    onSubmit={scheduleNotification} 
+                    onClose = {handleOnClose}/>
+               }           
             
             <TouchableWithoutFeedback onPress={handleModalClose}>
                 <View style={[styles.modalBG, StyleSheet.absoluteFillObject]}/>
@@ -285,7 +294,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                 onChange={onChange}
             />)}
             </View>
-            <Text style={styles.bellText}>{text}</Text>
+            {/* <Text style={styles.bellText}>{text}</Text> */}
             
             {
                 selectColors && 
