@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react'
-import { Text, StyleSheet, View, StatusBar, TouchableWithoutFeedback, Keyboard, FlatList } from 'react-native'
+import { Text, StyleSheet, View, StatusBar, TouchableWithoutFeedback, Keyboard, FlatList, ImageBackground } from 'react-native'
 import SearchBar from '../components/SearchBar'
 import colors from '../misc/colors'
 import RoundIconBtn from "../components/RoundIconBtn";
@@ -8,6 +8,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Note from '../components/Note';
 import { useNotes } from '../contexts/NoteProvider';
 import NotFound from '../components/NotFound';
+
+const imbackground = {uri: 'https://e0.pxfuel.com/wallpapers/3/666/desktop-wallpaper-most-definitely-has-already-been-posted-a-long-time-ago-but-this-is-from-firewatch-iphone-x-iphone-x.jpg'}
 
 const NoteScreen = ({user, navigation }) => {
 
@@ -116,6 +118,7 @@ const NoteScreen = ({user, navigation }) => {
 
     return (
         <>
+            <ImageBackground source={imbackground} resizeMode={'cover'} style={{flex: 1}}>
             <StatusBar barStyle='dark-content' backgroundColor={colors.LIGHT} />
 
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -161,6 +164,7 @@ const NoteScreen = ({user, navigation }) => {
             <NoteInputModal visible={modalVisible} 
             onClose={() => setModalVisible(false)}
             onSubmit={handleOnSubmit}/>
+            </ImageBackground>
         </>
     )
 }
