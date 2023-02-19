@@ -44,9 +44,12 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
 
     // ---------- select color
     const [selectColors, setSelectColors] = useState(false)
-    const [color, setColor] = useState(colors.PRIMARY)
-
-
+    const [color, setColor] = useState('#FFF')
+    
+    // const noteColor = note.color
+    if (note){
+        var noteColor = note.color
+    }
     function onChange(event, selectedDate) {
         const currentDate = selectedDate || date;
         setShow(Platform.OS == 'ios');
@@ -62,7 +65,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
             let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
             setText(fDate + ' - ' + fTime);
             
-            console.log(fDate + ' - ' + fTime);
+            // console.log(fDate + ' - ' + fTime);
     
             setDateTime(selectedDate);
         }     
@@ -73,15 +76,6 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         setMode(currentMode)
     }
 
-    const handleOnDateTime = () =>{
-        setIsBells(false)
-        if (text === ''){
-            const dateNow = new Date()
-            let fDate = dateNow.getDate() + '/' + (dateNow.getMonth() + 1) + '/' + dateNow.getFullYear();
-            let fTime = dateNow.getHours() + ':' + dateNow.getMinutes()
-            setText(fDate + ' - ' + fTime)
-        }
-    }
     /////////////////////////////////////////////////
     const richText = useRef();
 
@@ -100,7 +94,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         if (!title.trim() && !desc.trim()) {
             setText('')
             setSelectColors(false)
-            setColor(colors.PRIMARY)
+            setColor("#FFF")
             return onClose();
         }
 //////////////////////////////////////////////////// thêm bells
@@ -114,9 +108,9 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
             setTitle('');
             setDesc('');
             setDate('')
-            console.log(date)
+            // console.log(date)
             setSelectColors(false)
-            setColor(colors.PRIMARY)
+            setColor("#FFF")
         }
         setText('')
         onClose();
@@ -188,20 +182,6 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         if (valueFor === 'desc') setDesc(text);
     }
 
-    // Xử lý việc tạo mới cũng như update note
-    const handleSubmit = () => {
-        if (!title.trim() && !desc.trim()) return onClose();
-
-        if (isEdit) {
-            onSubmit(title, desc, date, Date.now())
-        }
-        else{
-            onSubmit(title, desc, date);
-            setTitle('');
-            setDesc('');
-        }
-        onClose();
-    }
 
     // Xử lý việc đóng modal
     const closeModal = () => {
@@ -212,46 +192,15 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         onClose();
     }
 
-    const handleOpenTimeBells = async() =>{
-        // const channelId = await notifee.createChannel({
-        //     id: 'default',
-        //     name: 'Default Channel',
-        //   });
-
-        //   await notifee.displayNotification({
-        //     title: 'Notification Title',
-        //     body: 'Main body content of the notification',
-        //     android: {
-        //       channelId,
-        //       smallIcon: 'name-of-a-small-icon', // optional, defaults to 'ic_launcher'.
-        //       // pressAction is needed if you want the notification to open the app when pressed
-        //       pressAction: {
-        //         id: 'default',
-        //       },
-        //     },
-        //   });
-        console.log("notify")
-    }
 
     const onHandleColor = (e) =>{
         const se_colors = e._dispatchInstances._debugOwner.key
         setColor(se_colors)
-        // if (se_colors === 'blue')
-        //     setColor(colors.BLUE)
-        // else if (se_colors === 'red')
-        //     setColor(colors.RED)
-        // else if (se_colors === 'green')
-        //     setColor(colors.GREEN)
-        // else if (se_colors === 'brown')
-        //     setColor(colors.BROWN)
-        // else
-        //     setColor(colors.PRIMARY)
         setSelectColors(false)
     }
 
     async function scheduleNotification() {
         setIsBells(false)
-
         // Set up the notification payload
         let notificationId = await Notifications.scheduleNotificationAsync({
           content: {
@@ -265,15 +214,15 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
     
         Alert.alert('Scheduled notification with id:', notificationId);
       }
-      const styleEditor = {
-        backgroundColor: color
-      }
 
+      const styleEditor = {
+        backgroundColor: noteColor || color
+      }
     return (
         <>
         <StatusBar hidden/>
         <Modal visible={visible} animationType='fade'>
-            <View style={{backgroundColor: color,...styles.container}}>
+            <View style={{backgroundColor:noteColor || color,...styles.container}}>
                 <TextInput
                     value={title}
                     onChangeText={text => handleOnChangeText(text, 'title')}
@@ -289,7 +238,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                     onChangeText={text => handleOnChangeText(text, 'desc')}
                 /> */}
 
-                <ScrollView style={{height: "70%",backgroundColor: color}}>
+                <ScrollView style={{height: "70%",backgroundColor: noteColor || color}}>
                     <RichToolbar
                         editor={richText}
                         selectedIconTint="#873c1e"
@@ -323,12 +272,13 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                     
                 </View>
             <RoundIconBtn antIconName='bells' style={styles.bells} onPress={handleOnPressBell}/>
-            <RoundIconBtn_Found antIconName='paint-bucket' style={{backgroundColor: "#fff",color: "#000", ...styles.paint}} onPress = {()=>selectColors ? setSelectColors(false) : setSelectColors(true)}/>
+            <RoundIconBtn_Found antIconName='paint-bucket' style={{backgroundColor: "#FFF",color: "#000", ...styles.paint}} onPress = {()=>selectColors ? setSelectColors(false) : setSelectColors(true)}/>
                 {isbells && <Bells_ 
                     date={date} 
                     onClickDate = {()=>showMode('date')} 
                     onClickTime = {()=>showMode('time')} 
                     onSubmit={scheduleNotification} />}
+           
             
             <TouchableWithoutFeedback onPress={handleModalClose}>
                 <View style={[styles.modalBG, StyleSheet.absoluteFillObject]}/>
@@ -369,7 +319,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         height: "24%",
         width: "100%",
-        backgroundColor: "#fff"
+        backgroundColor: "#FFF"
     },
     input: {
         borderBottomWidth: 2,
@@ -396,7 +346,7 @@ const styles = StyleSheet.create({
     },
     ////////////////////////////////
     richTextToolbarStyle: {
-        backgroundColor: "#fff",
+        backgroundColor: "#FFF",
     },
     bells:{
         position: 'relative',
