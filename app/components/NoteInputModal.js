@@ -251,6 +251,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
 
     async function scheduleNotification() {
         setIsBells(false)
+
         // Set up the notification payload
         let notificationId = await Notifications.scheduleNotificationAsync({
           content: {
@@ -267,6 +268,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
       const styleEditor = {
         backgroundColor: color
       }
+
     return (
         <>
         <StatusBar hidden/>
@@ -327,7 +329,6 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                     onClickDate = {()=>showMode('date')} 
                     onClickTime = {()=>showMode('time')} 
                     onSubmit={scheduleNotification} />}
-           
             
             <TouchableWithoutFeedback onPress={handleModalClose}>
                 <View style={[styles.modalBG, StyleSheet.absoluteFillObject]}/>

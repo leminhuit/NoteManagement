@@ -145,7 +145,7 @@ const NoteScreen = ({user, navigation }) => {
                             columnWrapperStyle={{justifyContent: 'space-between', marginBottom: 15}} 
                             keyExtractor={item => item.id.toString()} 
                             
-                            renderItem={({item}) => <Note styles={{backgroundColor: item.color.toString()}} onPress={() => openNote(item)} item = {item} onPressPush={()=>handleOnPressPush(item)}/>} />
+                            renderItem={({item}) => <Note styles={{backgroundColor: item.color}} onPress={() => openNote(item)} item = {item} onPressPush={()=>handleOnPressPush(item)}/>} />
                         </View>
                     }
 
