@@ -79,7 +79,7 @@ const NoteScreen = ({user, navigation }) => {
         }
 
         const filteredNotes = notes.filter(note => {
-            if (note.title.toLowerCase().includes(text.toLowerCase()))
+            if (note.title.toLowerCase().includes(text.toLowerCase()) || note.desc.toLowerCase().includes(text.toLowerCase()))
                 return note;
         })
 
@@ -142,7 +142,7 @@ const NoteScreen = ({user, navigation }) => {
                                 {/* Nếu không có note có tên đó trong dữ liệu thì render màn hình không tìm thấy
                                 , ngược lại render kết quả */}
                                 {resultNotFound? <NotFound/> : 
-                                    <ScrollView >
+                                    <View >
                                         {Object.entries(reverseNotes_Push).length !== 0 ? <Text> Được ghim </Text> : null}
                                         
                                         <FlatList data={reverseNotes_Push} numColumns={2} 
@@ -166,7 +166,7 @@ const NoteScreen = ({user, navigation }) => {
                                                 onPressPush={()=>handleOnPressPush(item)}
                                                 />} 
                                         />
-                                    </ScrollView>
+                                    </View>
                                 }
 
                                 {!notes.length ? 

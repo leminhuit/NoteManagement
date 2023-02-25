@@ -8,7 +8,7 @@ const Pushpin = ({antIconName, size, color, style, onPress}) => {
     return <AntDesign 
     name={antIconName} 
     size={size || 24} 
-    color={color || colors.LIGHT}
+    color={color || colors.DARK}
     style={[styles.icon, {...style}]}
     onPress= {onPress}
     />
