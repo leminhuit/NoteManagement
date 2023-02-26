@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useRef, useState } from 'react'
-import { Text, StyleSheet, View, Modal, Keyboard, StatusBar, TextInput, TouchableWithoutFeedback, ScrollView, Platform, Alert, Button  } from 'react-native'
+import { Text, StyleSheet, View, Modal, Keyboard, StatusBar, TextInput, TouchableWithoutFeedback, ScrollView, Platform, Alert, SafeAreaView  } from 'react-native'
 import colors from '../misc/colors'
 import RoundIconBtn from "../components/RoundIconBtn";
 import RoundIconBtn_Found from "../components/RoundIconBtn_Found";
@@ -9,6 +9,7 @@ import SelectColor from './SelectColor.js'
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ColorPicker from 'react-native-wheel-color-picker';
 
 /////////////////////////////////////////////////
 import {
@@ -205,16 +206,6 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         onClose();
     }
 
-
-    const onHandleColor = (e) =>{
-        const se_colors = e._dispatchInstances._debugOwner.key
-        console.log("se_color NoteInputModal line 204",se_colors)
-        console.log("color NoteInputModal line 205",color)
-        noteColor = se_colors
-        setColor(se_colors)
-        setSelectColors(false)
-    }
-
     async function scheduleNotification() {
         setIsBells(false)
         setDate(date)
@@ -264,6 +255,14 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
         }
     }
 
+    ////////////////////////////
+    //Picker color
+    const onColorChange = color => {
+        setColor(color);
+        if (note) note.color = color
+      };
+
+
 
     return (
         <>
@@ -305,6 +304,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                         style={styles.richTextToolbarStyle} />
             
                     <RichEditor
+                        onFocus={()=>setSelectColors(false)}
                         ref={richText}
                         initialContentHTML={desc}
                         onChange={richTextHandle}
@@ -337,15 +337,20 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                 onChange={onChange}
             />)}
             </View>
-            {/* <Text style={styles.bellText}>{text}</Text> */}
             {
                 selectColors && 
-                <View style={styles.colorContainer}>
-                    <Text style={{fontSize: 20, fontWeight: 'bold', color: "#D37D84", marginLeft: 10}}>Màu</Text>
-                    <SelectColor onPress={onHandleColor}/>
-                    <Text style={{fontSize: 20, fontWeight: 'bold', color: "#D37D84", marginLeft: 10}}>Hình nền</Text>
-                    
-                </View>
+                (
+                    <View style={styles.sectionContainer}>
+                            <ColorPicker
+                            color={color}
+                            onColorChange={(color) => onColorChange(color)}
+                            thumbSize={30}
+                            sliderSize={30}
+                            noSnap={true}
+                            row={false}
+                            />
+                    </View>
+                )
             }
             <View style={styles.footer}>
                 <RoundIconBtn_Found antIconName='paint-bucket' style={{backgroundColor: "#FFF",color: "#000", ...styles.paint}} onPress = {()=>selectColors ? setSelectColors(false) : setSelectColors(true)}/>
@@ -358,6 +363,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                 <RoundIconBtn antIconName='bells' style={styles.bells} onPress={handleOnPressBell}/>
              
             </View>
+            
         </Modal>
         
         </>
@@ -442,6 +448,18 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around'
     },
+    sectionContainer: {
+        marginTop: 70,
+        paddingHorizontal: 24,
+        paddingVertical: 24,
+        zIndex: 2,
+        position: 'absolute',
+        width: "60%",
+        left: "20%",
+        bottom: "20%",
+        elevation: 4,
+        backgroundColor: "#FFF"
+      },
     
     ////////////////////////////////
 })
