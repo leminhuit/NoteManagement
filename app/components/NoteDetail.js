@@ -113,6 +113,17 @@ const NoteDetail = (props) => {
     }
     //////////////////////////////////
 
+    const extractImageSource = (htmlString) => {
+      const regex = /<img.*?src="(.*?)"/; // regular expression to match the image source
+      const match = regex.exec(htmlString);
+      if (match && match[1]) {
+        return match[1]; // return the image source
+      }
+      return null;
+    };
+    
+    const imageSource = extractImageSource(note.desc);
+
     useEffect(()=>{
       contentNotify(note)
       console.log(1)
@@ -129,10 +140,11 @@ const NoteDetail = (props) => {
         
         <ScrollView>
           <RichEditor
-            // ref={richText}
+            ref={richText}
             initialContentHTML={note.desc}
             style={styles.richTextEditorStyle}
             initialHeight={250}
+            insertImage= {imageSource}
           />
         </ScrollView>
         {textNotify&&  <Text style={styles.contentNotifys}>Notify: {textNotify}</Text>}

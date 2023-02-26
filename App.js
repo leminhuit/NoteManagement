@@ -29,7 +29,7 @@ export default function App() {
 
   // Hàm render sau khi component chinh đã update, nhầm tìm người dùng nếu đã sử dụng qua app
   useEffect(() => {
-    //AsyncStorage.clear()
+    // AsyncStorage.clear()
     findUser()
 
     

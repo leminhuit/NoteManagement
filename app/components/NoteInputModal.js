@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useRef, useState } from 'react'
-import { Text, StyleSheet, View, Modal, Keyboard, StatusBar, TextInput, TouchableWithoutFeedback, ScrollView, Platform, Alert  } from 'react-native'
+import { Text, StyleSheet, View, Modal, Keyboard, StatusBar, TextInput, TouchableWithoutFeedback, ScrollView, Platform, Alert, Button  } from 'react-native'
 import colors from '../misc/colors'
 import RoundIconBtn from "../components/RoundIconBtn";
 import RoundIconBtn_Found from "../components/RoundIconBtn_Found";
@@ -16,6 +16,8 @@ import {
     RichEditor,
     RichToolbar,
   } from "react-native-pell-rich-editor";
+
+import * as ImagePicker from 'expo-image-picker';
 /////////////////////////////////////////////////
 
 // Modal xuất hiện khi ta muốn tạo ra Note mới hoặc Edit Note cũ
@@ -41,6 +43,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
     const responseListener = useRef();
+    const [image, setImage] = useState(null);
 
     // ---------- select color
     const [selectColors, setSelectColors] = useState(false)
@@ -179,6 +182,8 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
           return () => {
             Notifications.removeNotificationSubscription(notificationListener.current);
             Notifications.removeNotificationSubscription(responseListener.current);
+
+            getMediaLibraryPermission()
           };
     }, [isEdit])
 
@@ -235,6 +240,31 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
       const styleEditor = {
         backgroundColor: noteColor || color
       }
+
+      const getMediaLibraryPermission = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Permission to access media library is required!');
+        }
+      };
+
+      const pickImage = async () => {
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+    
+        if (!result.canceled) {
+          const uri = result.assets[0].uri;
+          console.log(uri)
+          richText.current?.insertImage(uri);
+        }
+    }
+
+
     return (
         <>
         <StatusBar hidden/>
@@ -271,6 +301,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                         actions.setStrikethrough,
                         actions.setUnderline,
                         ]}
+                        onPressAddImage={pickImage}
                         style={styles.richTextToolbarStyle} />
             
                     <RichEditor
@@ -280,6 +311,7 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
                         placeholder="Write your cool content here :)"
                         initialHeight={250}
                         editorStyle = {styleEditor}
+                        allowFileAccess={true}
                     />
                 </ScrollView>
 
