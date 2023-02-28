@@ -145,6 +145,7 @@ const NoteDetail = (props) => {
             style={styles.richTextEditorStyle}
             initialHeight={250}
             insertImage= {imageSource}
+            allowFileAccess={true}
           />
         </ScrollView>
         {textNotify&&  <Text style={styles.contentNotifys}>Notify: {textNotify}</Text>}
