@@ -11,7 +11,12 @@ nhóm chúng em đã chọn ứng dụng Quản lý ghi chú để thực hiện
 - Tìm kiếm những ghi chú đã ghi
 - Thay đổi ảnh nền cho ứng dụng, đổi màu nền cho ghi chú để phân loại ghi chú
 
-## Các bước sử dụng :
+## Các bước sử dụng:
 - Clone repository về hoặc download file về máy
 - Chạy lệnh yarn install để yarn cài đặt các thư viện cần thiết
 - Mở ứng dụng lên bằng cách chạy lệnh npx expo start
+
+## Update sau khi báo cáo:
+- Thêm khả năng tìm kiếm bằng nội dung của ghi chú
+- Thêm khả năng thêm ảnh vào rich editor
+- Thêm khả năng thay đổi màu nền của ghi chú tùy theo ý của người dùng bằng cách cho phép sử dụng Color Picker
