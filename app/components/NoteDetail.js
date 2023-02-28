@@ -1,5 +1,5 @@
 import React, { Component, useRef, useState, useEffect } from 'react'
-import { Text, StyleSheet, View, ScrollView, Alert, LogBox } from 'react-native'
+import { Text, StyleSheet, View, ScrollView,Dimensions, Alert, LogBox, Keyboard } from 'react-native'
 import { useHeaderHeight } from '@react-navigation/elements'
 import colors from '../misc/colors'
 import RoundIconBtn from './RoundIconBtn';
@@ -17,6 +17,8 @@ import {
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
+const width_window = Dimensions.get('window').width - 50
+const height_window = Dimensions.get('window').height - 160
 // Xử lý việc lưu lại ngày ghi chú
 const formatDate = ms => {
   const date = new Date(ms)
@@ -42,6 +44,7 @@ const NoteDetail = (props) => {
     /////////////////////////////////////////////////
     const richText = useRef();
     /////////////////////////////////////////////////
+    
 
     const deleteNote = async () => {
       const result = await AsyncStorage.getItem('notes')
@@ -129,26 +132,33 @@ const NoteDetail = (props) => {
       console.log(1)
     },[])
 
+    const styleEditor = {
+      backgroundColor: note.color,
+
+    }
 
     return (
       <>
-      <ScrollView contentContainerStyle={[styles.container, {paddingTop: headerHeight}]}>
+      <ScrollView contentContainerStyle={[styles.container, {paddingTop: headerHeight, backgroundColor: note.color, height: "100%"}]}>
 
         <Text style={styles.time}>{note.isUpdated ? `Updated At ${formatDate(note.time)}` : `Created At ${formatDate(note.time)}`}</Text>
+        {textNotify&&  <Text style={styles.contentNotifys}>Notify: {textNotify}</Text>}
         <Text style={styles.title}>{note.title}</Text>
         {/* <Text style={styles.desc}>{note.desc}</Text> */}
         
-        <ScrollView>
+        <ScrollView style={{backgroundColor: note.color}}>
           <RichEditor
             ref={richText}
             initialContentHTML={note.desc}
             style={styles.richTextEditorStyle}
-            initialHeight={250}
+            initialHeight={height_window}
             insertImage= {imageSource}
             allowFileAccess={true}
+            editorStyle = {styleEditor}
+            disabled={true}
           />
         </ScrollView>
-        {textNotify&&  <Text style={styles.contentNotifys}>Notify: {textNotify}</Text>}
+       
        
       </ScrollView>
       
@@ -188,19 +198,13 @@ const styles = StyleSheet.create({
       bottom: 50, 
     },
     richTextEditorStyle: {
-      borderBottomLeftRadius: 10,
-      borderBottomRightRadius: 10,
-      borderWidth: 1,
-      borderColor: "#ccaf9b",
       shadowColor: "#000",
-      shadowOffset: {
-      width: 0,
-      height: 2,
-      },
-      shadowOpacity: 0.23,
-      shadowRadius: 2.62,
       elevation: 4,
       fontSize: 20,
+      height: "70%",
+      borderColor: "#000",
+      borderWidth: 1,
+      
     },
     richTextToolbarStyle: {
       backgroundColor: "#c6c3b3",
