@@ -375,14 +375,6 @@ const styles = StyleSheet.create({
         paddingTop: 15,
         width: "100%",
     },
-    colorContainer:{
-        position: "absolute",
-        bottom: 0,
-        height: "24%",
-        width: "100%",
-        backgroundColor: "#FFF",
-        zIndex: 2
-    },
     input: {
         borderBottomWidth: 2,
         color: colors.PRIMARY,
@@ -454,8 +446,8 @@ const styles = StyleSheet.create({
         paddingVertical: 24,
         zIndex: 2,
         position: 'absolute',
-        width: "60%",
-        left: "20%",
+        width: "70%",
+        left: "15%",
         bottom: "20%",
         elevation: 4,
         backgroundColor: "#FFF"
