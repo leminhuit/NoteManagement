@@ -98,7 +98,6 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
     
         if (!title.trim() && !desc.trim()) {
             setText('')
-            setSelectColors(false)
             setColor("#FFF")
             setDate('')
             return onClose();
@@ -114,10 +113,10 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
             setTitle('');
             setDesc('');
             setDate('')
-            // console.log(date)
-            setSelectColors(false)
             setColor("#FFF")
         }
+        setSelectColors(false)
+        setIsBells(false)
         setText('')
         onClose();
     };
@@ -203,6 +202,8 @@ const NoteInputModal = ({visible, onClose, onSubmit, note, isEdit}) => {
             setColor("#FFF")
             setDate('')
         }
+        setSelectColors(false)
+        setIsBells(false)
         onClose();
     }
 
